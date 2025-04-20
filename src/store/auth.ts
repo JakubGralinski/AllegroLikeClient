@@ -5,8 +5,8 @@ import { JWT_TOKEN_COOKIE_NAME } from "../lib/constants";
 import { User } from "../lib/types";
 
 interface TokenPayload {
-  username: string;
-  role: string;
+  sub: string;
+  role: string[];
   exp: number;
 }
 
@@ -24,9 +24,13 @@ const authSlice = createSlice({
   reducers: {
     loginUser(state, action: PayloadAction<string>) {
       const token = action.payload;
-      const user = jwtDecode<User>(token);
+      const user = jwtDecode<TokenPayload>(token);
       Cookies.set(JWT_TOKEN_COOKIE_NAME, token);
-      state.user = user;
+      console.log(user);
+      state.user = {
+        username: user.sub,
+        role: user.role[0],
+      } as User;
     },
     logoutUser(state) {
       Cookies.remove(JWT_TOKEN_COOKIE_NAME);
@@ -39,8 +43,8 @@ const authSlice = createSlice({
           const payload = jwtDecode<TokenPayload>(token);
           if (payload.exp * 1000 > Date.now()) {
             state.user = {
-              username: payload.username,
-              role: payload.username,
+              username: payload.sub,
+              role: payload.role[0],
             } as User;
           } else {
             Cookies.remove(JWT_TOKEN_COOKIE_NAME);
