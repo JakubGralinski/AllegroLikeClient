@@ -1,0 +1,24 @@
+name: Build check workflow
+
+on:
+  push:
+    branches: ["**"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 23
+
+      - name: install npm deps
+        run: npm install
+
+      - name: run build
+        run: npm run build
