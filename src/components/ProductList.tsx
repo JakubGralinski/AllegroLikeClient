@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Grid,
@@ -7,7 +7,6 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Button,
   TextField,
   Box,
   Pagination,
@@ -18,9 +17,12 @@ import {
   Slider,
   CircularProgress,
   Alert,
-} from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
-import productService, { Product, ProductFilters } from '../lib/product.service';
+} from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import productService, {
+  Product,
+  ProductFilters,
+} from "../lib/product.service";
 
 const ProductList: React.FC = () => {
   const navigate = useNavigate();
@@ -28,9 +30,9 @@ const ProductList: React.FC = () => {
     page: 0,
     size: 12,
   });
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
-  const [category, setCategory] = useState<string>('');
+  const [category, setCategory] = useState<string>("");
 
   // Debounce search term
   useEffect(() => {
@@ -52,11 +54,11 @@ const ProductList: React.FC = () => {
   }, [category, priceRange]);
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['products', filters],
+    queryKey: ["products", filters],
     queryFn: () => productService.getAllProducts(filters),
   });
 
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handlePageChange = (value: number) => {
     setFilters((prev) => ({ ...prev, page: value - 1 }));
   };
 
@@ -66,7 +68,12 @@ const ProductList: React.FC = () => {
 
   if (isLoading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="50vh"
+      >
         <CircularProgress />
       </Box>
     );
@@ -75,7 +82,9 @@ const ProductList: React.FC = () => {
   if (isError) {
     return (
       <Container>
-        <Alert severity="error">Error loading products: {(error as Error).message}</Alert>
+        <Alert severity="error">
+          Error loading products: {(error as Error).message}
+        </Alert>
       </Container>
     );
   }
@@ -89,7 +98,7 @@ const ProductList: React.FC = () => {
       {/* Filters */}
       <Box sx={{ mb: 4 }}>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4} component={"div" as React.ElementType}>
             <TextField
               fullWidth
               label="Search products"
@@ -98,7 +107,7 @@ const ProductList: React.FC = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4} component={"div" as React.ElementType}>
             <FormControl fullWidth>
               <InputLabel>Category</InputLabel>
               <Select
@@ -114,11 +123,13 @@ const ProductList: React.FC = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4} component={"div" as React.ElementType}>
             <Typography gutterBottom>Price Range</Typography>
             <Slider
               value={priceRange}
-              onChange={(_, newValue) => setPriceRange(newValue as [number, number])}
+              onChange={(_, newValue) =>
+                setPriceRange(newValue as [number, number])
+              }
               valueLabelDisplay="auto"
               min={0}
               max={1000}
@@ -130,14 +141,22 @@ const ProductList: React.FC = () => {
       {/* Product Grid */}
       <Grid container spacing={3}>
         {data?.content.map((product: Product) => (
-          <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
+          <Grid
+            item
+            key={product.id}
+            xs={12}
+            sm={6}
+            md={4}
+            lg={3}
+            component={"div" as React.ElementType}
+          >
             <Card
               sx={{
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                cursor: 'pointer',
-                '&:hover': {
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                cursor: "pointer",
+                "&:hover": {
                   boxShadow: 6,
                 },
               }}
@@ -146,14 +165,22 @@ const ProductList: React.FC = () => {
               <CardMedia
                 component="img"
                 height="200"
-                image={product.imageUrl || 'https://via.placeholder.com/300x200?text=No+Image'}
+                image={
+                  product.imageUrl ||
+                  "https://via.placeholder.com/300x200?text=No+Image"
+                }
                 alt={product.name}
               />
               <CardContent sx={{ flexGrow: 1 }}>
                 <Typography gutterBottom variant="h6" component="h2" noWrap>
                   {product.name}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }} noWrap>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mb: 1 }}
+                  noWrap
+                >
                   {product.description}
                 </Typography>
                 <Typography variant="h6" color="primary">
@@ -174,7 +201,7 @@ const ProductList: React.FC = () => {
           <Pagination
             count={data.totalPages}
             page={filters.page ? filters.page + 1 : 1}
-            onChange={handlePageChange}
+            onChange={(_, value) => handlePageChange(value)}
             color="primary"
           />
         </Box>
@@ -183,4 +210,4 @@ const ProductList: React.FC = () => {
   );
 };
 
-export default ProductList; 
+export default ProductList;

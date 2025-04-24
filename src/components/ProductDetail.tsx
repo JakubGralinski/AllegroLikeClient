@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Container,
-  Grid,
   Typography,
   Box,
   Button,
@@ -11,21 +10,25 @@ import {
   CircularProgress,
   Alert,
   TextField,
-  Rating,
-} from '@mui/material';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import productService, { Product } from '../lib/product.service';
-import { useAuth } from '../lib/AuthContext';
+  Grid,
+} from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import productService from "../lib/product.service";
+import { useAuth } from "../lib/AuthContext";
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useAuth();
-  const queryClient = useQueryClient();
+  const { isAuthenticated } = useAuth();
   const [quantity, setQuantity] = useState<number>(1);
 
-  const { data: product, isLoading, isError, error } = useQuery({
-    queryKey: ['product', id],
+  const {
+    data: product,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["product", id],
     queryFn: () => productService.getProductById(Number(id)),
     enabled: !!id,
   });
@@ -37,7 +40,12 @@ const ProductDetail: React.FC = () => {
 
   if (isLoading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="50vh"
+      >
         <CircularProgress />
       </Box>
     );
@@ -46,7 +54,9 @@ const ProductDetail: React.FC = () => {
   if (isError || !product) {
     return (
       <Container>
-        <Alert severity="error">Error loading product: {(error as Error).message}</Alert>
+        <Alert severity="error">
+          Error loading product: {(error as Error).message}
+        </Alert>
       </Container>
     );
   }
@@ -55,30 +65,33 @@ const ProductDetail: React.FC = () => {
     <Container sx={{ py: 4 }}>
       <Grid container spacing={4}>
         {/* Product Image */}
-        <Grid item xs={12} md={6}>
-          <Paper elevation={3} sx={{ p: 2, height: '100%' }}>
+        <Grid item xs={12} md={6} component={"div" as React.ElementType}>
+          <Paper elevation={3} sx={{ p: 2, height: "100%" }}>
             <Box
               component="img"
-              src={product.imageUrl || 'https://via.placeholder.com/600x400?text=No+Image'}
+              src={
+                product.imageUrl ||
+                "https://via.placeholder.com/600x400?text=No+Image"
+              }
               alt={product.name}
               sx={{
-                width: '100%',
-                height: 'auto',
-                maxHeight: '500px',
-                objectFit: 'contain',
+                width: "100%",
+                height: "auto",
+                maxHeight: "500px",
+                objectFit: "contain",
               }}
             />
           </Paper>
         </Grid>
 
         {/* Product Details */}
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={6} component={"div" as React.ElementType}>
           <Paper elevation={3} sx={{ p: 3 }}>
             <Typography variant="h4" component="h1" gutterBottom>
               {product.name}
             </Typography>
-            
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+
+            <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
               <Typography variant="h5" color="primary" sx={{ mr: 2 }}>
                 ${product.price.toFixed(2)}
               </Typography>
@@ -110,9 +123,11 @@ const ProductDetail: React.FC = () => {
                 <TextField
                   type="number"
                   value={quantity}
-                  onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                  onChange={(e) =>
+                    setQuantity(Math.max(1, parseInt(e.target.value) || 1))
+                  }
                   inputProps={{ min: 1 }}
-                  sx={{ width: '100px', mr: 2 }}
+                  sx={{ width: "100px", mr: 2 }}
                 />
                 <Button
                   variant="contained"
@@ -131,7 +146,7 @@ const ProductDetail: React.FC = () => {
                 variant="contained"
                 color="primary"
                 size="large"
-                onClick={() => navigate('/login')}
+                onClick={() => navigate("/login")}
                 sx={{ mt: 2 }}
               >
                 Login to Purchase
@@ -144,4 +159,4 @@ const ProductDetail: React.FC = () => {
   );
 };
 
-export default ProductDetail; 
+export default ProductDetail;
