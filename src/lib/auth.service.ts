@@ -17,24 +17,41 @@ export interface RegisterRequest {
 export interface AuthResponse {
   token: string;
   type: string;
-  id: number;
   username: string;
-  email: string;
-  roles: string[];
 }
 
 class AuthService {
   async login(data: LoginRequest): Promise<AuthResponse> {
-    const response = await axios.post(`${API_URL}/signin`, data);
-    if (response.data.token) {
-      Cookies.set('token', response.data.token, { expires: 1 });
+    try {
+      const response = await axios.post(`${API_URL}/login`, data);
+      if (response.data.token) {
+        Cookies.set('token', response.data.token, { expires: 1 });
+      }
+      return response.data;
+    } catch (error: any) {
+      if (error.response) {
+        throw new Error(error.response.data || 'Login failed');
+      }
+      throw error;
     }
-    return response.data;
   }
 
   async register(data: RegisterRequest): Promise<AuthResponse> {
-    const response = await axios.post(`${API_URL}/signup`, data);
-    return response.data;
+    try {
+      console.log('Sending registration data:', data);
+      const response = await axios.post(`${API_URL}/registerUser`, data);
+      console.log('Registration response:', response.data);
+      if (response.data.token) {
+        Cookies.set('token', response.data.token, { expires: 1 });
+      }
+      return response.data;
+    } catch (error: any) {
+      console.error('Registration error:', error.response?.data || error.message);
+      if (error.response) {
+        throw new Error(error.response.data || 'Registration failed');
+      }
+      throw error;
+    }
   }
 
   logout(): void {
