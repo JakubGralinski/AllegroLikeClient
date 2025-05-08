@@ -10,6 +10,8 @@ import { AuthProvider } from "./lib/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import ProductPage from "./components/ProductPage";
+import { CartProvider } from "./store/CartContext";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -31,21 +33,23 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <AuthProvider>
-          <Router>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route
-                path="/"
-                element={
-                  <ProtectedRoute>
-                    <div>Protected Home Page</div>
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </Router>
+          <CartProvider>
+            <Router>
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <ProductPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Router>
+          </CartProvider>
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>

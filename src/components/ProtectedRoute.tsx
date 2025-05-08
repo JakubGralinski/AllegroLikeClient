@@ -10,6 +10,13 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
 
+  // Development mode - bypass authentication
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  if (isDevelopment) {
+    return <>{children}</>;
+  }
+
+  // Production mode - normal authentication
   if (loading) {
     return <div>Loading...</div>;
   }
