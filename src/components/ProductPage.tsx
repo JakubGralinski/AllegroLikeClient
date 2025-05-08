@@ -282,13 +282,17 @@ const ProductPage: React.FC = () => {
       )}
 
       {/* Product Grid */}
-      <Grid 
-        container 
-        spacing={4} 
-        sx={{ maxWidth: 3 * 345 + 2 * 32, margin: '0 auto' }} // 345px card width + 32px spacing
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: 4,
+          maxWidth: 3 * 345 + 2 * 32,
+          margin: '0 auto',
+        }}
       >
         {filteredProducts.map((product) => (
-          <Grid item key={product.id} xs={12} md={4}>
+          <Box key={product.id}>
             <Card 
               sx={{ 
                 height: '100%', 
@@ -342,9 +346,9 @@ const ProductPage: React.FC = () => {
                 </Box>
               )}
             </Card>
-          </Grid>
+          </Box>
         ))}
-      </Grid>
+      </Box>
     </Container>
   );
 };

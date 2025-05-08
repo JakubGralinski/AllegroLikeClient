@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Badge, IconButton, Popover, Box, Typography, List, ListItem, ListItemText, Divider, Button } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useCart } from '../store/CartContext';
@@ -7,17 +7,38 @@ import { useNavigate } from 'react-router-dom';
 const CartMenu: React.FC = () => {
   const { cartItems, removeFromCart, clearCart } = useCart();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [iconHovered, setIconHovered] = useState(false);
+  const [popoverHovered, setPopoverHovered] = useState(false);
   const navigate = useNavigate();
+  const closeTimer = useRef<NodeJS.Timeout | null>(null);
 
   const handleIconEnter = (event: React.MouseEvent<HTMLElement>) => {
+    setIconHovered(true);
     setAnchorEl(event.currentTarget);
+    if (closeTimer.current) clearTimeout(closeTimer.current);
   };
   const handleIconLeave = () => {
-    setAnchorEl(null);
+    setIconHovered(false);
+    closeTimer.current = setTimeout(() => {
+      if (!popoverHovered) setAnchorEl(null);
+    }, 100);
   };
-  const handleClick = () => {
+  const handlePopoverEnter = () => {
+    setPopoverHovered(true);
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+  };
+  const handlePopoverLeave = () => {
+    setPopoverHovered(false);
+    closeTimer.current = setTimeout(() => {
+      if (!iconHovered) setAnchorEl(null);
+    }, 100);
+  };
+  const handleGoToCart = () => {
     setAnchorEl(null);
     navigate('/cart');
+  };
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
   };
 
   const open = Boolean(anchorEl);
@@ -28,7 +49,6 @@ const CartMenu: React.FC = () => {
         color="inherit"
         onMouseEnter={handleIconEnter}
         onMouseLeave={handleIconLeave}
-        onClick={handleClick}
         size="large"
         sx={{ ml: 2 }}
       >
@@ -39,10 +59,14 @@ const CartMenu: React.FC = () => {
       <Popover
         open={open}
         anchorEl={anchorEl}
-        onClose={handleIconLeave}
+        onClose={handlePopoverClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        PaperProps={{ onMouseEnter: handleIconEnter, onMouseLeave: handleIconLeave, sx: { minWidth: 300 } }}
+        PaperProps={{
+          onMouseEnter: handlePopoverEnter,
+          onMouseLeave: handlePopoverLeave,
+          sx: { minWidth: 300 },
+        }}
         disableRestoreFocus
       >
         <Box sx={{ p: 2 }}>
@@ -67,7 +91,7 @@ const CartMenu: React.FC = () => {
           {cartItems.length > 0 && (
             <>
               <Divider sx={{ my: 1 }} />
-              <Button fullWidth variant="contained" color="primary" onClick={handleClick}>
+              <Button fullWidth variant="contained" color="primary" onClick={handleGoToCart}>
                 Go to Cart
               </Button>
               <Button fullWidth variant="text" color="secondary" onClick={clearCart} sx={{ mt: 1 }}>
