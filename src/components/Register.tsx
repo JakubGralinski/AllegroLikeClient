@@ -52,7 +52,6 @@ const Register: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors },
-    trigger,
   } = useForm<RegisterFormInputs>({
     resolver: yupResolver(schema),
   });

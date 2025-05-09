@@ -70,7 +70,7 @@ const ProductPage: React.FC = () => {
     setSelectedCondition(event.target.value);
   };
 
-  const handlePriceRangeChange = (event: Event, newValue: number | number[]) => {
+  const handlePriceRangeChange = (_event: Event, newValue: number | number[]) => {
     setPriceRange(newValue as number[]);
   };
 
@@ -101,7 +101,7 @@ const ProductPage: React.FC = () => {
       {/* Search and Filter Header */}
       <Box sx={{ mb: 4 }}>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={8} component={"div" as React.ElementType}>
             <TextField
               fullWidth
               variant="outlined"
@@ -117,7 +117,7 @@ const ProductPage: React.FC = () => {
               }}
             />
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4} component={"div" as React.ElementType}>
             <Box sx={{ display: 'flex', gap: 2 }}>
               <FormControl fullWidth>
                 <InputLabel>Sort By</InputLabel>
@@ -139,7 +139,7 @@ const ProductPage: React.FC = () => {
       {showFilters && (
         <Paper sx={{ p: 2, mb: 4 }}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={4} component={"div" as React.ElementType}>
               <FormControl fullWidth>
                 <InputLabel>Category</InputLabel>
                 <Select value={selectedCategory} onChange={handleCategoryChange} label="Category">
@@ -151,7 +151,7 @@ const ProductPage: React.FC = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={4} component={"div" as React.ElementType}>
               <FormControl fullWidth>
                 <InputLabel>Condition</InputLabel>
                 <Select value={selectedCondition} onChange={handleConditionChange} label="Condition">
@@ -163,7 +163,7 @@ const ProductPage: React.FC = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={4} component={"div" as React.ElementType}>
               <Typography gutterBottom>Price Range</Typography>
               <Slider
                 value={priceRange}
@@ -185,7 +185,7 @@ const ProductPage: React.FC = () => {
       {/* Product Grid */}
       <Grid container spacing={3}>
         {filteredProducts.map((product) => (
-          <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
+          <Grid item key={product.id} xs={12} sm={6} md={4} lg={3} component={"div" as React.ElementType}>
             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               <CardMedia
                 component="img"

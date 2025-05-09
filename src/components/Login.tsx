@@ -37,7 +37,6 @@ const Login: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors },
-    trigger,
   } = useForm<LoginFormInputs>({
     resolver: yupResolver(schema),
   });
