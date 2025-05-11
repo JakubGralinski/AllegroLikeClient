@@ -12,7 +12,7 @@ import {
   Box,
   Alert,
 } from "@mui/material";
-import { useAuth } from "../lib/AuthContext";
+import { useAuth } from "./AuthContext";
 import gsap from "gsap";
 
 const schema = yup.object().shape({
