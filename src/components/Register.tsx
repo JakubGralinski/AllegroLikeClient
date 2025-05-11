@@ -205,6 +205,26 @@ const Register: React.FC = () => {
               >
                 Register
               </Button>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 1,
+                }}
+              >
+                <Typography variant="body2" color="text.secondary">
+                  Already have an account?
+                </Typography>
+                <Button
+                  variant="text"
+                  color="primary"
+                  onClick={() => navigate("/login")}
+                  sx={{ textTransform: "none" }}
+                >
+                  Login
+                </Button>
+              </Box>
             </Box>
           </Paper>
         </Box>
