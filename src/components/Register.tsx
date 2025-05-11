@@ -65,7 +65,7 @@ const Register: React.FC = () => {
       );
     }
   }, []);
-
+  
   // Button hover animation
   React.useEffect(() => {
     const btn = buttonRef.current;
