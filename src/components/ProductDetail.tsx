@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import productService from "../lib/product.service";
-import { useAuth } from "../lib/AuthContext";
+import { useAuth } from "./AuthContext";
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
