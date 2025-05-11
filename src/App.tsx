@@ -10,6 +10,7 @@ import { AuthProvider } from "./components/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import AuthAnim from "./components/AuthAnim";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -33,8 +34,24 @@ function App() {
         <AuthProvider>
           <Router>
             <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+              <Route
+                path="/login"
+                element={
+                  <>
+                    <AuthAnim />
+                    <Login />
+                  </>
+                }
+              />
+              <Route
+                path="/register"
+                element={
+                  <>
+                    <AuthAnim />
+                    <Register />
+                  </>
+                }
+              />
               <Route
                 path="/"
                 element={
