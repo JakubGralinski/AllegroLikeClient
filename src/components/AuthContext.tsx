@@ -24,20 +24,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = authService.getCurrentUser();
-    if (token) {
-      // Here you could verify the token and get user info
-      setLoading(false);
-    } else {
-      setLoading(false);
-    }
-  }, []);
+    (async () => {
+      const token = authService.getCurrentUser();
+      if (token && !user) {
+        const user = await authService.checkCurrentUserToken(token);
+        if (user) {
+          setUser(user);
+        } else {
+          logout();
+        }
+        setLoading(false);
+      } else {
+        setLoading(false);
+      }
+    })();
+  }, [user]);
 
   const login = async (username: string, password: string) => {
     try {
       const response = await authService.login({ username, password });
       setUser(response);
     } catch (error) {
+      console.log(error);
       throw error;
     }
   };
@@ -55,6 +63,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       });
       setUser(response);
     } catch (error) {
+      console.log(error);
       throw error;
     }
   };
