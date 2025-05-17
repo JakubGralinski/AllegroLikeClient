@@ -1,9 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { AuthResponse } from "../lib/auth.service";
 import authService from "../lib/auth.service";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../store";
+import {loginUser, logoutUser} from "../store/auth.ts";
+import {User} from "../lib/types.ts";
 
 interface AuthContextType {
-  user: AuthResponse | null;
+  user: User | null;
   loading: boolean;
   login: (username: string, password: string) => Promise<void>;
   register: (
@@ -20,30 +23,36 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<AuthResponse | null>(null);
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.auth.user);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       const token = authService.getCurrentUser();
       if (token && !user) {
-        const user = await authService.checkCurrentUserToken(token);
-        if (user) {
-          setUser(user);
+        const userResponse = await authService.checkCurrentUserToken(token);
+        if (userResponse) {
+          dispatch(loginUser({
+            username: userResponse.username,
+            role: userResponse.role
+          }));
         } else {
           logout();
         }
-        setLoading(false);
       } else {
         setLoading(false);
       }
     })();
-  }, [user]);
+  }, [dispatch, user]);
 
   const login = async (username: string, password: string) => {
     try {
       const response = await authService.login({ username, password });
-      setUser(response);
+      dispatch(loginUser({
+        username: response.username,
+        role: response.role
+      }));
     } catch (error) {
       console.log(error);
       throw error;
@@ -61,7 +70,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         email,
         password,
       });
-      setUser(response);
+      dispatch(loginUser({
+        username: response.username,
+        role: response.role
+      }));
     } catch (error) {
       console.log(error);
       throw error;
@@ -70,7 +82,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = () => {
     authService.logout();
-    setUser(null);
+    dispatch(logoutUser());
   };
 
   const value = {

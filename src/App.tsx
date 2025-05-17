@@ -11,6 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import AuthAnim from "./components/AuthAnim";
+import Homepage from "./components/Homepage.tsx";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -56,7 +57,7 @@ function App() {
                 path="/"
                 element={
                   <ProtectedRoute>
-                    <div>Protected Home Page</div>
+                    <Homepage />
                   </ProtectedRoute>
                 }
               />
