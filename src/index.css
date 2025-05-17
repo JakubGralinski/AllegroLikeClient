@@ -1,20 +1,6 @@
 @import "tailwindcss";
 
-#auth-bg-blobs {
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.bg-blob {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(60px);
-  opacity: 0.6;
-  pointer-events: none;
-  z-index: 0;
-  transition: background 1s;
+@theme {
+  --color-primary: #1976d2;
+  --color-secondary: #dc004e;
 }

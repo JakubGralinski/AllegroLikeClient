@@ -31,20 +31,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     (async () => {
       const token = authService.getCurrentUser();
       if (token && !user) {
-        const userResponse = await authService.checkCurrentUserToken(token);
-        if (userResponse) {
-          dispatch(loginUser({
-            username: userResponse.username,
-            role: userResponse.role
-          }));
-        } else {
+        try {
+          const userResponse = await authService.checkCurrentUserToken(token);
+          if (userResponse) {
+            dispatch(loginUser({
+              username: userResponse.username,
+              role: userResponse.role,
+            }));
+          } else {
+            logout();
+          }
+        } catch (error) {
+          console.error("Error occurred while validating token:", error);
           logout();
+        } finally {
+          setLoading(false);
         }
       } else {
         setLoading(false);
       }
     })();
   }, [dispatch, user]);
+
 
   const login = async (username: string, password: string) => {
     try {
@@ -91,7 +99,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     login,
     register,
     logout,
-    isAuthenticated: !!user,
+    isAuthenticated: !!user && !!user.username && !!user.role,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

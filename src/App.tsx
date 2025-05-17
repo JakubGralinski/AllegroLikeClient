@@ -11,7 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import AuthAnim from "./components/AuthAnim";
-import Homepage from "./components/Homepage.tsx";
+import ProductPage from "./components/ProductPage.tsx";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -56,8 +56,8 @@ function App() {
               <Route
                 path="/"
                 element={
-                  <ProtectedRoute>
-                    <Homepage />
+                  <ProtectedRoute includeNavbar>
+                    <ProductPage />
                   </ProtectedRoute>
                 }
               />
