@@ -1,5 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import {JWT_TOKEN_COOKIE_NAME} from "./constants.ts";
 
 const API_URL = "http://localhost:8080/api/auth";
 
@@ -16,8 +17,8 @@ export interface RegisterRequest {
 
 export interface AuthResponse {
   token: string;
-  type: string;
   username: string;
+  role: string;
 }
 
 class AuthService {
@@ -25,7 +26,7 @@ class AuthService {
     try {
       const response = await axios.post(`${API_URL}/login`, data);
       if (response.data.token) {
-        Cookies.set("token", response.data.token, { expires: 1 });
+        Cookies.set(JWT_TOKEN_COOKIE_NAME, response.data.token, { expires: 1 });
       }
       return response.data;
     } catch (error: any) {
@@ -38,11 +39,9 @@ class AuthService {
 
   async register(data: RegisterRequest): Promise<AuthResponse> {
     try {
-      console.log("Sending registration data:", data);
       const response = await axios.post(`${API_URL}/registerUser`, data);
-      console.log("Registration response:", response.data);
       if (response.data.token) {
-        Cookies.set("token", response.data.token, { expires: 1 });
+        Cookies.set(JWT_TOKEN_COOKIE_NAME, response.data.token, { expires: 1 });
       }
       return response.data;
     } catch (error: any) {
@@ -58,11 +57,11 @@ class AuthService {
   }
 
   logout(): void {
-    Cookies.remove("token");
+    Cookies.remove(JWT_TOKEN_COOKIE_NAME);
   }
 
   getCurrentUser(): string | undefined {
-    return Cookies.get("token");
+    return Cookies.get(JWT_TOKEN_COOKIE_NAME);
   }
 
   async checkCurrentUserToken(token: string): Promise<AuthResponse | null> {
@@ -76,7 +75,7 @@ class AuthService {
       const user = response.data;
       return {
         token,
-        type: "Bearer",
+        role: user.role,
         username: user.username,
       };
     } catch (error) {
