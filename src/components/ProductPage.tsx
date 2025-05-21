@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Container,
   Grid,
@@ -16,41 +16,41 @@ import {
   Paper,
   InputAdornment,
   IconButton,
-} from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import FilterListIcon from '@mui/icons-material/FilterList';
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import FilterListIcon from "@mui/icons-material/FilterList";
 
 // Mock data for initial development
 const mockProducts = [
   {
     id: 1,
-    title: 'iPhone 13 Pro',
+    title: "iPhone 13 Pro",
     price: 999.99,
-    image: 'https://via.placeholder.com/200',
-    category: 'Electronics',
-    condition: 'New',
-    date: '2024-03-15',
+    image: "https://via.placeholder.com/200",
+    category: "Electronics",
+    condition: "New",
+    date: "2024-03-15",
   },
   {
     id: 2,
-    title: 'MacBook Air M2',
+    title: "MacBook Air M2",
     price: 1299.99,
-    image: 'https://via.placeholder.com/200',
-    category: 'Electronics',
-    condition: 'New',
-    date: '2024-03-14',
+    image: "https://via.placeholder.com/200",
+    category: "Electronics",
+    condition: "New",
+    date: "2024-03-14",
   },
   // Add more mock products as needed
 ];
 
-const categories = ['All', 'Electronics', 'Clothing', 'Home', 'Sports'];
-const conditions = ['All', 'New', 'Used', 'Refurbished'];
+const categories = ["All", "Electronics", "Clothing", "Home", "Sports"];
+const conditions = ["All", "New", "Used", "Refurbished"];
 
 const ProductPage: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('date');
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [selectedCondition, setSelectedCondition] = useState('All');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("date");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCondition, setSelectedCondition] = useState("All");
   const [priceRange, setPriceRange] = useState<number[]>([0, 2000]);
   const [showFilters, setShowFilters] = useState(false);
 
@@ -70,26 +70,36 @@ const ProductPage: React.FC = () => {
     setSelectedCondition(event.target.value);
   };
 
-  const handlePriceRangeChange = (_event: Event, newValue: number | number[]) => {
+  const handlePriceRangeChange = (
+    _event: Event,
+    newValue: number | number[]
+  ) => {
     setPriceRange(newValue as number[]);
   };
 
   // Filter and sort products
   const filteredProducts = mockProducts
     .filter((product) => {
-      const matchesSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory;
-      const matchesCondition = selectedCondition === 'All' || product.condition === selectedCondition;
-      const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
-      return matchesSearch && matchesCategory && matchesCondition && matchesPrice;
+      const matchesSearch = product.title
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      const matchesCategory =
+        selectedCategory === "All" || product.category === selectedCategory;
+      const matchesCondition =
+        selectedCondition === "All" || product.condition === selectedCondition;
+      const matchesPrice =
+        product.price >= priceRange[0] && product.price <= priceRange[1];
+      return (
+        matchesSearch && matchesCategory && matchesCondition && matchesPrice
+      );
     })
     .sort((a, b) => {
       switch (sortBy) {
-        case 'price-asc':
+        case "price-asc":
           return a.price - b.price;
-        case 'price-desc':
+        case "price-desc":
           return b.price - a.price;
-        case 'date':
+        case "date":
           return new Date(b.date).getTime() - new Date(a.date).getTime();
         default:
           return 0;
@@ -97,7 +107,11 @@ const ProductPage: React.FC = () => {
     });
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+    <Container
+      maxWidth="lg"
+      sx={{ mt: 4, mb: 4 }}
+      className="h-screen flex items-center justify-center flex-col"
+    >
       {/* Search and Filter Header */}
       <Box sx={{ mb: 4 }}>
         <Grid container spacing={2} alignItems="center">
@@ -118,10 +132,14 @@ const ProductPage: React.FC = () => {
             />
           </Grid>
           <Grid item xs={12} md={4} component={"div" as React.ElementType}>
-            <Box sx={{ display: 'flex', gap: 2 }}>
+            <Box sx={{ display: "flex", gap: 2 }}>
               <FormControl fullWidth>
                 <InputLabel>Sort By</InputLabel>
-                <Select value={sortBy} onChange={handleSortChange} label="Sort By">
+                <Select
+                  value={sortBy}
+                  onChange={handleSortChange}
+                  label="Sort By"
+                >
                   <MenuItem value="date">Newest</MenuItem>
                   <MenuItem value="price-asc">Price: Low to High</MenuItem>
                   <MenuItem value="price-desc">Price: High to Low</MenuItem>
@@ -142,7 +160,11 @@ const ProductPage: React.FC = () => {
             <Grid item xs={12} md={4} component={"div" as React.ElementType}>
               <FormControl fullWidth>
                 <InputLabel>Category</InputLabel>
-                <Select value={selectedCategory} onChange={handleCategoryChange} label="Category">
+                <Select
+                  value={selectedCategory}
+                  onChange={handleCategoryChange}
+                  label="Category"
+                >
                   {categories.map((category) => (
                     <MenuItem key={category} value={category}>
                       {category}
@@ -154,7 +176,11 @@ const ProductPage: React.FC = () => {
             <Grid item xs={12} md={4} component={"div" as React.ElementType}>
               <FormControl fullWidth>
                 <InputLabel>Condition</InputLabel>
-                <Select value={selectedCondition} onChange={handleConditionChange} label="Condition">
+                <Select
+                  value={selectedCondition}
+                  onChange={handleConditionChange}
+                  label="Condition"
+                >
                   {conditions.map((condition) => (
                     <MenuItem key={condition} value={condition}>
                       {condition}
@@ -173,7 +199,7 @@ const ProductPage: React.FC = () => {
                 max={2000}
                 step={50}
               />
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Typography variant="body2">${priceRange[0]}</Typography>
                 <Typography variant="body2">${priceRange[1]}</Typography>
               </Box>
@@ -185,8 +211,18 @@ const ProductPage: React.FC = () => {
       {/* Product Grid */}
       <Grid container spacing={3}>
         {filteredProducts.map((product) => (
-          <Grid item key={product.id} xs={12} sm={6} md={4} lg={3} component={"div" as React.ElementType}>
-            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+          <Grid
+            item
+            key={product.id}
+            xs={12}
+            sm={6}
+            md={4}
+            lg={3}
+            component={"div" as React.ElementType}
+          >
+            <Card
+              sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+            >
               <CardMedia
                 component="img"
                 height="200"
@@ -212,4 +248,4 @@ const ProductPage: React.FC = () => {
   );
 };
 
-export default ProductPage; 
+export default ProductPage;
