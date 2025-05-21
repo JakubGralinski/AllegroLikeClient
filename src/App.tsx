@@ -13,6 +13,7 @@ import Register from "./components/Register";
 import AuthAnim from "./components/AuthAnim";
 import ProductPage from "./components/ProductPage.tsx";
 import Profile from "./components/Profile.tsx";
+import AdminDashboard from "./components/AdminDashboard";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -69,6 +70,14 @@ function App() {
                       <Profile />
                     </ProtectedRoute>
                   }
+              />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute includeNavbar>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
               />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

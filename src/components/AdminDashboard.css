@@ -1,0 +1,122 @@
+.admin-dashboard {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.admin-dashboard h1 {
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+.controls {
+  margin-bottom: 2rem;
+}
+
+.data-selector {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  min-width: 200px;
+}
+
+.data-selector:hover {
+  border-color: #4CAF50;
+}
+
+.data-selector:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.sales-graph {
+  background: linear-gradient(135deg, #e3f2fd 0%, #e8f5e9 100%);
+  padding: 2rem 1.5rem 2.5rem 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(33, 150, 243, 0.08), 0 1.5px 6px rgba(76, 175, 80, 0.07);
+  position: relative;
+  min-height: 480px;
+  margin-bottom: 2rem;
+  transition: box-shadow 0.2s;
+  max-width: 100vw;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: auto;
+}
+
+.sales-graph:hover {
+  box-shadow: 0 8px 32px rgba(33, 150, 243, 0.13), 0 3px 12px rgba(76, 175, 80, 0.12);
+}
+
+.sales-graph h2 {
+  color: #1976d2;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.value-label {
+  font-size: 12px;
+  fill: #666;
+}
+
+.d3-tooltip {
+  pointer-events: none;
+  position: absolute;
+  min-width: 90px;
+  min-height: 40px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: opacity 0.2s;
+  opacity: 0.97;
+}
+
+.ridgeline-graph {
+  background: linear-gradient(135deg, #f3e5f5 0%, #e3f2fd 100%);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(171, 71, 188, 0.08), 0 1.5px 6px rgba(33, 150, 243, 0.07);
+  padding: 2rem 1.5rem 2.5rem 1.5rem;
+  margin: 0 auto 2rem auto;
+  min-height: 350px;
+  max-width: 900px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .admin-dashboard {
+    padding: 1rem;
+  }
+  .sales-graph {
+    padding: 1rem;
+    min-height: 320px;
+  }
+  .ridgeline-graph {
+    padding: 1rem;
+    min-height: 220px;
+  }
+}
+
+@media (max-width: 600px) {
+  .sales-graph {
+    padding: 0.5rem;
+    min-height: 220px;
+  }
+  .admin-dashboard h1 {
+    font-size: 1.2rem;
+  }
+  .sales-graph h2 {
+    font-size: 1rem;
+  }
+} 
