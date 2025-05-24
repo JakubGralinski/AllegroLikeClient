@@ -46,7 +46,7 @@ function AddressInputPopup({ setIsAddressInputPopupOpen }: AddressInputPopupProp
     }
 
     return (
-        <div className="fixed bg-primary rounded-2xl flex-col items-center gap-5 w-[50%] h-[50%] max-md:w-[80%] justify-center text-center">
+        <div className="fixed bg-primary rounded-2xl flex-col items-center gap-5 w-[70%] h-[70%] max-md:w-[80%] justify-center text-center">
             <button onClick={() => setIsAddressInputPopupOpen(false)} className="bg-secondary p-2 absolute top-2 right-2 rounded-2xl text-white transition-all duration-200 ease-in-out transform hover:scale-[1.02] hover:shadow-md cursor-pointer">
                 <IoMdClose />
             </button>
@@ -119,21 +119,27 @@ function AddressInputPopup({ setIsAddressInputPopupOpen }: AddressInputPopupProp
                             <button type="submit" className="p-2 rounded-r-lg bg-secondary text-white transition-all duration-200 ease-in-out transform hover:scale-[1.02] hover:shadow-md cursor-pointer">Search</button>
                         </form>
 
-                        {
-                            foundAddresses && (
-                                foundAddresses.length > 0 ? (
-                                    foundAddresses.map((item) => (
-                                        <button
-                                            className="hover:underline underline-offset-2 cursor-pointer mt-5 text-white"
-                                            onClick={() => handleAddressUpdate(item.id)}
-                                        >
-                                            {item.id}. {item.street} {item.houseNumber} in {item.city}, {item.country}
-                                        </button>))
-                                ) : (
-                                    <div>Could not find any address for this query</div>
+                        <div className="flex gap-2 flex-col items-center justify-center mt-10 max-md:mt-20">
+                            <h2 className="font-semibold text-lg text-white">Search Results:</h2>
+                            {
+                                foundAddresses && (
+                                    foundAddresses.length > 0 ? (
+                                        foundAddresses.map((item) => (
+                                            <button
+                                                className="hover:underline underline-offset-2 cursor-pointer mt-5 text-white"
+                                                onClick={() => handleAddressUpdate(item.id)}
+                                            >
+                                                {item.id}. {item.street} {item.houseNumber} in {item.city}, {item.country}
+                                            </button>))
+                                    ) : (
+                                        <div>Could not find any address for this query</div>
+                                    )
                                 )
-                            )
-                        }
+                            }
+                        </div>
+
+
+                        <br />
 
                         <button
                             className="hover:underline underline-offset-2 cursor-pointer mt-5 text-white"
