@@ -6,7 +6,7 @@ import axios from "axios";
 class AddressService {
     async searchAddress(searchQuery: string): Promise<Address[]> {
         const jwtToken = authService.getCurrentUser();
-        const url = `${BASE_API_URL}/addresses/${searchQuery}`;
+        const url = `${BASE_API_URL}addresses/${searchQuery}`;
         const response = await axios.get(url, {
             headers: {
                 Authorization: `Bearer ${jwtToken}`
