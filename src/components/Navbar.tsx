@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ADMIN, navigations } from "../lib/constants.ts";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
