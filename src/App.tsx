@@ -1,10 +1,9 @@
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
-import { ThemeProvider, createTheme } from "@mui/material";
+import { ThemeProvider as MuiThemeProvider, createTheme, PaletteMode } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./components/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -13,28 +12,32 @@ import Register from "./components/Register";
 import AuthAnim from "./components/AuthAnim";
 import ProductPage from "./components/ProductPage.tsx";
 import Profile from "./components/Profile.tsx";
+import { useTheme } from "./context/ThemeContext";
 
 // Create a client
 const queryClient = new QueryClient();
 
-// Create a theme
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#1976d2",
-    },
-    secondary: {
-      main: "#dc004e",
-    },
-  },
-});
-
 function App() {
+  const { theme: appTheme } = useTheme();
+
+  // Create MUI theme dynamically based on our appTheme
+  const muiTheme = createTheme({
+    palette: {
+      mode: appTheme as PaletteMode,
+      primary: {
+        main: "#1976d2",
+      },
+      secondary: {
+        main: "#dc004e",
+      },
+    },
+  });
+
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <AuthProvider>
-          <Router>
+      <MuiThemeProvider theme={muiTheme}>
+        <div className={`min-h-screen ${appTheme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
+          <AuthProvider>
             <Routes>
               <Route
                 path="/login"
@@ -72,9 +75,9 @@ function App() {
               />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
-          </Router>
-        </AuthProvider>
-      </ThemeProvider>
+          </AuthProvider>
+        </div>
+      </MuiThemeProvider>
     </QueryClientProvider>
   );
 }
