@@ -1,10 +1,11 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ADMIN, navigations } from "../lib/constants.ts";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { useState } from "react";
 import { IoMenu } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
+import authService from "../lib/auth.service.ts";
 
 function Navbar() {
   const location = useLocation();
@@ -49,7 +50,17 @@ function Navbar() {
           ))}
         </nav>
 
-        <div className="w-full text-center px-4 py-2 text-sm text-black bg-gray-300 font-bold rounded-b-2xl ">
+        <button
+          onClick={() => {
+            authService.logout();
+            window.location.href = "/login";
+          }}
+          className="rounded-2xl text-center px-4 py-2 text-sm text-white w-[90%] bg-red-500 font-semibold transition-all duration-200 ease-in-out transform hover:scale-[1.02] hover:shadow-md mb-4"
+          style={{ margin: '0 auto' }}
+        >
+          Logout
+        </button>
+        <div className="w-full text-center px-4 py-2 text-sm text-black bg-gray-300 font-bold rounded-b-2xl mt-4">
           {user?.username}
         </div>
       </div>
