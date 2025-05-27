@@ -1,15 +1,17 @@
-import { Link, useLocation } from "react-router-dom";
-import { ADMIN, navigations } from "../lib/constants.ts";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ADMIN, navigations } from "../lib/constants";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { useState } from "react";
 import { IoMenu } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
+import authService from "../lib/auth.service";
 
 function Navbar() {
   const location = useLocation();
   const user = useSelector((state: RootState) => state.auth.user);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const navigate = useNavigate();
 
   const trueNavigations = [...navigations];
 
@@ -21,6 +23,11 @@ function Navbar() {
     if (window.innerWidth < 800) {
       setIsMobileOpen(!isMobileOpen);
     }
+  }
+
+  function handleLogout() {
+    authService.logout();
+    navigate("/login");
   }
 
   return (
@@ -49,7 +56,13 @@ function Navbar() {
           ))}
         </nav>
 
-        <div className="w-full text-center px-4 py-2 text-sm text-black bg-gray-300 font-bold rounded-b-2xl ">
+        <button
+          onClick={handleLogout}
+          className="rounded-2xl mx-auto text-center px-4 py-2 text-sm text-white w-[90%] bg-red-500 font-semibold transition-all duration-200 ease-in-out transform hover:scale-[1.02] hover:shadow-md mb-4 cursor-pointer"
+        >
+          Logout
+        </button>
+        <div className="w-full text-center px-4 py-2 text-sm text-black bg-gray-300 font-bold rounded-b-2xl mt-4">
           {user?.username}
         </div>
       </div>
