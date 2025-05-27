@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {createContext, useContext, useEffect, useState} from "react";
 import authService from "../lib/auth.service";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
@@ -34,10 +34,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         try {
           const userResponse = await authService.checkCurrentUserToken(token);
           if (userResponse) {
-            dispatch(loginUser({
-              username: userResponse.username,
-              role: userResponse.role,
-            }));
+            dispatch(loginUser(userResponse.user));
           } else {
             logout();
           }
@@ -57,10 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const login = async (username: string, password: string) => {
     try {
       const response = await authService.login({ username, password });
-      dispatch(loginUser({
-        username: response.username,
-        role: response.role
-      }));
+      dispatch(loginUser(response.user));
     } catch (error) {
       console.log(error);
       throw error;
@@ -78,10 +72,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         email,
         password,
       });
-      dispatch(loginUser({
-        username: response.username,
-        role: response.role
-      }));
+      dispatch(loginUser(response.user));
     } catch (error) {
       console.log(error);
       throw error;

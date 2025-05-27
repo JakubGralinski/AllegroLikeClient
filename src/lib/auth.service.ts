@@ -1,6 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import {JWT_TOKEN_COOKIE_NAME} from "./constants.ts";
+import {User} from "./types.ts";
 
 const API_URL = "http://localhost:8080/api/auth";
 
@@ -17,8 +18,7 @@ export interface RegisterRequest {
 
 export interface AuthResponse {
   token: string;
-  username: string;
-  role: string;
+  user: User;
 }
 
 class AuthService {
@@ -72,11 +72,10 @@ class AuthService {
         },
       });
 
-      const user = response.data;
+      const authResponse: AuthResponse = response.data;
       return {
         token,
-        role: user.role,
-        username: user.username,
+        user: authResponse.user
       };
     } catch (error) {
       console.error("Token check failed", error);
