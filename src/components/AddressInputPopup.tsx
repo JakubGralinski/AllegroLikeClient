@@ -58,7 +58,7 @@ function AddressInputPopup({
   }
 
   return (
-    <div className="fixed bg-primary rounded-2xl flex-col items-center gap-5 w-[70%] h-[70%] max-md:w-[80%] justify-center text-center">
+    <div className="flex fixed bg-primary rounded-2xl flex-col items-center gap-5 w-[70%] h-[70%] max-md:w-[80%] justify-center text-center">
       <button
         onClick={() => setIsAddressInputPopupOpen(false)}
         className="bg-secondary p-2 absolute top-2 right-2 rounded-2xl text-white transition-all duration-200 ease-in-out transform hover:scale-[1.02] hover:shadow-md cursor-pointer"
@@ -138,7 +138,7 @@ function AddressInputPopup({
               value={searchQuery}
               placeholder="Type to search your address..."
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-white p-2 w-70 rounded-l-lg focus:ring-0 focus:outline-none"
+              className="bg-white text-black p-2 w-70 rounded-l-lg focus:ring-0 focus:outline-none"
             />
             <button
               type="submit"
@@ -147,13 +147,12 @@ function AddressInputPopup({
               Search
             </button>
           </form>
-
-          <div className="flex gap-2 flex-col items-center justify-center mt-10 max-md:mt-20">
-            <h2 className="font-semibold text-lg text-white">
-              Search Results:
-            </h2>
-            {foundAddresses &&
-              (foundAddresses.length > 0 ? (
+          {foundAddresses && (
+            <div className="flex gap-2 flex-col items-center justify-center mt-10 max-md:mt-20">
+              <h2 className="font-semibold text-lg text-white">
+                Search Results:
+              </h2>
+              {foundAddresses.length > 0 ? (
                 foundAddresses.map((item) => (
                   <button
                     className="hover:underline underline-offset-2 cursor-pointer mt-5 text-white"
@@ -165,8 +164,9 @@ function AddressInputPopup({
                 ))
               ) : (
                 <div>Could not find any address for this query</div>
-              ))}
-          </div>
+              )}
+            </div>
+          )}
 
           <br />
 

@@ -1,6 +1,13 @@
 @import "tailwindcss";
+@tailwind utilities;
+
+@layer utilities {
+    .bg-themed {
+        @apply bg-white text-black dark:bg-gray-900 dark:text-white;
+    }
+}
 
 @theme {
-  --color-primary: #1976d2;
-  --color-secondary: #dc004e;
+    --color-primary: #1976d2;
+    --color-secondary: #dc004e;
 }
