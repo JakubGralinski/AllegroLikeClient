@@ -62,7 +62,15 @@ const AuthAnim: React.FC = () => {
   }, []);
 
   return (
-    <Box sx={{ position: 'fixed', inset: 0, /* zIndex: -1, */ width: '100vw', height: '100vh', overflow: 'hidden' }}>
+    <Box
+      sx={{
+        position: "fixed",
+        inset: 0,
+        width: "100vw",
+        height: "100vh",
+        overflow: "hidden",
+      }}
+    >
       <svg
         id="auth-bg-wave"
         width="100vw"
