@@ -12,4 +12,14 @@ export type Address = {
   country: string;
   street: string;
   houseNumber: number;
-}
+};
+
+export type Result<T> =
+  | {
+      isSuccess: true;
+      content: T;
+    }
+  | {
+      isSuccess: false;
+      errMessage: string;
+    };

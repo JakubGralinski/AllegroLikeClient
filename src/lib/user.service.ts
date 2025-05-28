@@ -1,7 +1,8 @@
-import { User } from "./types.ts";
+import { Result, User } from "./types.ts";
 import authService from "./auth.service.ts";
 import { BASE_API_URL } from "./constants.ts";
 import axios from "axios";
+import { handleApiResponseError } from "./utils.ts";
 
 export interface CreateCurrentUserAddressProps {
   city: string;
@@ -19,48 +20,89 @@ class UserService {
   async updateCurrentUserAddress(
     addressId: number,
     userId: number,
-  ): Promise<User> {
+  ): Promise<Result<User>> {
     const jwtToken = authService.getCurrentUser();
     const url = `${BASE_API_URL}users/${userId}/address/${addressId}`;
-    const response = await axios.put(url, {
-      headers: {
-        Authorization: `Bearer ${jwtToken}`,
-      },
-    });
 
-    return response.data;
+    try {
+      const response = await axios.put(url, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+      return {
+        isSuccess: true,
+        content: response.data,
+      };
+    } catch (err: any) {
+      if (err.response && err.response.status === 404) {
+        return {
+          isSuccess: false,
+          errMessage:
+            "Current user was not found in the database, please relogin",
+        };
+      }
+      return handleApiResponseError(err);
+    }
   }
 
   async createCurrentUserAddress(
     createUserAddressProps: CreateCurrentUserAddressProps,
     userId: number,
-  ): Promise<User> {
+  ): Promise<Result<User>> {
     const jwtToken = authService.getCurrentUser();
     const url = `${BASE_API_URL}users/${userId}/address`;
-    const response = await axios.post(url, createUserAddressProps, {
-      headers: {
-        Authorization: `Bearer ${jwtToken}`,
-        "Content-Type": "application/json",
-      },
-    });
 
-    return response.data;
+    try {
+      const response = await axios.post(url, createUserAddressProps, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      return {
+        isSuccess: true,
+        content: response.data,
+      };
+    } catch (err: any) {
+      if (err.response && err.response.status === 404) {
+        return {
+          isSuccess: false,
+          errMessage:
+            "Current user was not found in the database, please relogin",
+        };
+      }
+      return handleApiResponseError(err);
+    }
   }
 
   async updateCurrentUser(
     updateCurrentUserProps: UpdateCurrentUserProps,
     userId: number,
-  ): Promise<User> {
+  ): Promise<Result<User>> {
     const jwtToken = authService.getCurrentUser();
     const url = `${BASE_API_URL}users/${userId}`;
-    const response = await axios.patch(url, updateCurrentUserProps, {
-      headers: {
-        Authorization: `Bearer ${jwtToken}`,
-        "Content-Type": "application/json",
-      },
-    });
 
-    return response.data;
+    try {
+      const response = await axios.patch(url, updateCurrentUserProps, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      return response.data;
+    } catch (err: any) {
+      if (err.response && err.response.status === 404) {
+        return {
+          isSuccess: false,
+          errMessage:
+            "Current user was not found in the database, please relogin",
+        };
+      }
+      return handleApiResponseError(err);
+    }
   }
 }
 
