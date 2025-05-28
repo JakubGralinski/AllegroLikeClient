@@ -235,13 +235,11 @@ const ProductPage: React.FC = () => {
             >
               <CardMedia
                 component="img"
-                // height="200" // We should consider sx prop for responsive height or aspect ratio
                 image={product.image}
                 alt={product.title}
                 sx={{ 
                   objectFit: 'cover', // Ensures the image covers the area, might crop
-                  height: 200, // Fixed height for now
-                  // For a more responsive approach, we should consider aspectRatio: '16/9' or similar
+                  aspectRatio: '16/9', // Responsive aspect ratio for better design
                 }}
               />
               <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', p: 2 }}>
