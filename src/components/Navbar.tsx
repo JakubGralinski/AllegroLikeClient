@@ -12,7 +12,6 @@ function Navbar() {
   const location = useLocation();
   const user = useSelector((state: RootState) => state.auth.user);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const navigate = useNavigate();
 
   const trueNavigations = [...navigations];
 
