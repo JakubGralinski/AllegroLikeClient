@@ -221,22 +221,37 @@ const ProductPage: React.FC = () => {
             component={"div" as React.ElementType}
           >
             <Card
-              sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+              sx={{
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
+                "&:hover": {
+                  transform: "scale(1.03)",
+                  boxShadow: 6, // Corresponds to theme.shadows[6]
+                },
+                // Dark mode considerations (MUI handles most of this via theme
+              }}
             >
               <CardMedia
                 component="img"
-                height="200"
+                // height="200" // We should consider sx prop for responsive height or aspect ratio
                 image={product.image}
                 alt={product.title}
+                sx={{ 
+                  objectFit: 'cover', // Ensures the image covers the area, might crop
+                  height: 200, // Fixed height for now
+                  // For a more responsive approach, we should consider aspectRatio: '16/9' or similar
+                }}
               />
-              <CardContent sx={{ flexGrow: 1 }}>
-                <Typography gutterBottom variant="h6" component="h2">
+              <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', p: 2 }}>
+                <Typography gutterBottom variant="h6" component="h2" sx={{ fontWeight: 'medium', mb: 1 }}>
                   {product.title}
                 </Typography>
-                <Typography variant="h6" color="primary">
+                <Typography variant="h5" color="primary" sx={{ fontWeight: 'bold', mb: 1 }}>
                   ${product.price}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 'auto' }}> {/* Pushes to bottom if card content is taller */}
                   {product.category} • {product.condition}
                 </Typography>
               </CardContent>
