@@ -31,13 +31,13 @@ class UserService {
         },
       });
       return {
-        success: true,
+        isSuccess: true,
         content: response.data,
       };
     } catch (err: any) {
-      if (err.response.status === 404) {
+      if (err.response && err.response.status === 404) {
         return {
-          success: false,
+          isSuccess: false,
           errMessage:
             "Current user was not found in the database, please relogin",
         };
@@ -62,13 +62,13 @@ class UserService {
       });
 
       return {
-        success: true,
+        isSuccess: true,
         content: response.data,
       };
     } catch (err: any) {
-      if (err.response.status === 404) {
+      if (err.response && err.response.status === 404) {
         return {
-          success: false,
+          isSuccess: false,
           errMessage:
             "Current user was not found in the database, please relogin",
         };
@@ -94,9 +94,9 @@ class UserService {
 
       return response.data;
     } catch (err: any) {
-      if (err.response.status === 404) {
+      if (err.response && err.response.status === 404) {
         return {
-          success: false,
+          isSuccess: false,
           errMessage:
             "Current user was not found in the database, please relogin",
         };

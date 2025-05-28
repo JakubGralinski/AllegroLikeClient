@@ -5,19 +5,19 @@ export function handleApiResponseError<T>(err: any): Result<T> {
   if (err.response) {
     if (err.response.status === 500) {
       return {
-        success: false,
+        isSuccess: false,
         errMessage: SERVER_ERR_MSG,
       };
     }
 
     return {
-      success: false,
+      isSuccess: false,
       errMessage: err.response.data?.message,
     };
   }
 
   return {
-    success: false,
+    isSuccess: false,
     errMessage: NETWORK_ERR_MSG,
   };
 }

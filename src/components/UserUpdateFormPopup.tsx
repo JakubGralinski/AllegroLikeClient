@@ -24,11 +24,10 @@ function UserUpdateFormPopup({
   async function handleUserUpdate(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (email == user!.email && username == user!.username) {
-      console.log("im here");
       setError("At least one of the fields has to be changed");
       return;
     }
-    const userResp = await userService.updateCurrentUser(
+    const userResult = await userService.updateCurrentUser(
       {
         username,
         email,
@@ -36,8 +35,12 @@ function UserUpdateFormPopup({
       user!.id,
     );
 
-    dispatch(loginUser(userResp));
-    setIsUserUpdatePopupOpen(false);
+    if (userResult.isSuccess) {
+      dispatch(loginUser(userResult.content));
+      setIsUserUpdatePopupOpen(false);
+    } else {
+      setError(userResult.errMessage);
+    }
   }
 
   return (

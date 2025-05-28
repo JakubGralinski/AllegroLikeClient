@@ -25,6 +25,7 @@ function AddressInputPopup({
   const [country, setCountry] = useState("");
   const [street, setStreet] = useState("");
   const [houseNumber, setHouseNumber] = useState<number>(0);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleSearch(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -33,7 +34,7 @@ function AddressInputPopup({
 
   async function handleAddressCreate(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const userResp = await userService.createCurrentUserAddress(
+    const userResult = await userService.createCurrentUserAddress(
       {
         city,
         country,
@@ -43,18 +44,26 @@ function AddressInputPopup({
       user!.id,
     );
 
-    dispatch(loginUser(userResp));
-    setIsAddressInputPopupOpen(false);
+    if (userResult.isSuccess) {
+      dispatch(loginUser(userResult.content));
+      setIsAddressInputPopupOpen(false);
+    } else {
+      setError(userResult.errMessage);
+    }
   }
 
   async function handleAddressUpdate(addressId: number) {
-    const userResp = await userService.updateCurrentUserAddress(
+    const userResult = await userService.updateCurrentUserAddress(
       addressId,
       user!.id,
     );
 
-    dispatch(loginUser(userResp));
-    setIsAddressInputPopupOpen(false);
+    if (userResult.isSuccess) {
+      dispatch(loginUser(userResult.content));
+      setIsAddressInputPopupOpen(false);
+    } else {
+      setError(userResult.errMessage);
+    }
   }
 
   return (
@@ -81,7 +90,7 @@ function AddressInputPopup({
               value={city}
               placeholder="Your city..."
               onChange={(e) => setCity(e.target.value)}
-              className="bg-white p-2 w-70 rounded-lg focus:ring-0 focus:outline-none placeholder-gray-500 dark:placeholder-gray-400"
+              className="bg-white text-black p-2 w-70 rounded-lg focus:ring-0 focus:outline-none placeholder-gray-500 dark:placeholder-gray-400"
             />
             <input
               type="text"
@@ -89,7 +98,7 @@ function AddressInputPopup({
               value={country}
               placeholder="Your country..."
               onChange={(e) => setCountry(e.target.value)}
-              className="bg-white p-2 w-70 rounded-lg focus:ring-0 focus:outline-none placeholder-gray-500 dark:placeholder-gray-400"
+              className="bg-white text-black p-2 w-70 rounded-lg focus:ring-0 focus:outline-none placeholder-gray-500 dark:placeholder-gray-400"
             />
             <input
               type="text"
@@ -97,7 +106,7 @@ function AddressInputPopup({
               value={street}
               placeholder="Your street..."
               onChange={(e) => setStreet(e.target.value)}
-              className="bg-white p-2 w-70 rounded-lg focus:ring-0 focus:outline-none placeholder-gray-500 dark:placeholder-gray-400"
+              className="bg-white text-black p-2 w-70 rounded-lg focus:ring-0 focus:outline-none placeholder-gray-500 dark:placeholder-gray-400"
             />
             <div className="flex gap-2 items-center justify-center">
               <p className="text-white">House number:</p>
@@ -178,6 +187,7 @@ function AddressInputPopup({
           </button>
         </>
       )}
+      {error && <div className="text-secondary font-semibold">{error}</div>}
     </div>
   );
 }

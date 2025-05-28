@@ -16,10 +16,10 @@ export type Address = {
 
 export type Result<T> =
   | {
-      success: true;
+      isSuccess: true;
       content: T;
     }
   | {
-      success: false;
+      isSuccess: false;
       errMessage: string;
     };
