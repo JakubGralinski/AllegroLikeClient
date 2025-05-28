@@ -11,9 +11,11 @@ import {
   Typography,
   Box,
   Alert,
+  useTheme as useMuiTheme,
 } from "@mui/material";
 import { useAuth } from "./AuthContext";
 import gsap from "gsap";
+import { useTheme } from "../context/ThemeContext";
 
 const schema = yup.object().shape({
   username: yup.string().required("Username is required"),
@@ -32,6 +34,9 @@ const Login: React.FC = () => {
   const [error, setError] = React.useState<string>("");
   const paperRef = React.useRef<HTMLDivElement>(null);
   const buttonRef = React.useRef<HTMLButtonElement>(null);
+  
+  const { theme: appTheme } = useTheme();
+  const muiTheme = useMuiTheme();
 
   const {
     register,
@@ -101,13 +106,13 @@ const Login: React.FC = () => {
 
   return (
     <>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 64px - 64px)' /* Adjust if you have fixed header/footer heights */ }}>
         <Box
           sx={{
-            marginTop: 8,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            width: '100%', // Ensure Box takes width of container
           }}
         >
           <Paper
@@ -119,6 +124,7 @@ const Login: React.FC = () => {
               flexDirection: "column",
               alignItems: "center",
               width: "100%",
+              backgroundColor: appTheme === 'dark' ? muiTheme.palette.grey[900] : muiTheme.palette.background.paper,
             }}
           >
             <Typography component="h1" variant="h5">
