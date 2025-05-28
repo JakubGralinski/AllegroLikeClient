@@ -1,7 +1,8 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../store';
-import { CartItem, removeItemFromCart, updateItemQuantity } from '../store/cartSlice';
+// import { CartItem, removeItemFromCart, updateItemQuantity } from '../store/cartSlice'; // CartItem no longer directly used here
+import { removeItemFromCart, updateItemQuantity } from '../store/cartSlice';
 import {
   Container,
   Typography,
@@ -13,7 +14,7 @@ import {
   IconButton,
   Button,
   Box,
-  TextField,
+  // TextField, // No longer used
   Paper,
   Divider,
   useTheme as useMuiTheme
