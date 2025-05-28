@@ -230,7 +230,7 @@ const ProductPage: React.FC = () => {
                   transform: "scale(1.03)",
                   boxShadow: 6, // Corresponds to theme.shadows[6]
                 },
-                // Dark mode considerations (MUI handles most of this via theme
+                
               }}
             >
               <CardMedia
