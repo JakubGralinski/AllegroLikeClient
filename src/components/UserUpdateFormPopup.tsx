@@ -24,7 +24,6 @@ function UserUpdateFormPopup({
   async function handleUserUpdate(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (email == user!.email && username == user!.username) {
-      console.log("im here");
       setError("At least one of the fields has to be changed");
       return;
     }

@@ -20,8 +20,8 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import { useDispatch } from 'react-redux';
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import { useDispatch } from "react-redux";
 import { addItemToCart, CartItem } from "../store/cartSlice";
 import { AppDispatch } from "../store";
 
@@ -78,7 +78,7 @@ const ProductPage: React.FC = () => {
 
   const handlePriceRangeChange = (
     _event: Event,
-    newValue: number | number[]
+    newValue: number | number[],
   ) => {
     setPriceRange(newValue as number[]);
   };
@@ -112,8 +112,7 @@ const ProductPage: React.FC = () => {
       }
     });
 
-  const handleAddToCart = (product: Omit<CartItem, 'quantity'>) => {
-    console.log("handleAddToCart called with:", product);
+  const handleAddToCart = (product: Omit<CartItem, "quantity">) => {
     dispatch(addItemToCart(product));
   };
 
@@ -236,44 +235,66 @@ const ProductPage: React.FC = () => {
                 height: "100%",
                 display: "flex",
                 flexDirection: "column",
-                transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
+                transition:
+                  "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
                 "&:hover": {
                   transform: "scale(1.03)",
                   boxShadow: 6, // Corresponds to theme.shadows[6]
                 },
-                
               }}
             >
               <CardMedia
                 component="img"
                 image={product.image}
                 alt={product.title}
-                sx={{ 
-                  objectFit: 'cover', // Ensures the image covers the area, might crop
-                  aspectRatio: '16/9', // Responsive aspect ratio for better design
+                sx={{
+                  objectFit: "cover", // Ensures the image covers the area, might crop
+                  aspectRatio: "16/9", // Responsive aspect ratio for better design
                 }}
               />
-              <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', p: 2 }}>
-                <Typography gutterBottom variant="h6" component="h2" sx={{ fontWeight: 'medium', mb: 1 }}>
+              <CardContent
+                sx={{
+                  flexGrow: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  p: 2,
+                }}
+              >
+                <Typography
+                  gutterBottom
+                  variant="h6"
+                  component="h2"
+                  sx={{ fontWeight: "medium", mb: 1 }}
+                >
                   {product.title}
                 </Typography>
-                <Typography variant="h5" color="primary" sx={{ fontWeight: 'bold', mb: 1 }}>
+                <Typography
+                  variant="h5"
+                  color="primary"
+                  sx={{ fontWeight: "bold", mb: 1 }}
+                >
                   ${product.price}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 'auto' }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mt: "auto" }}
+                >
                   {product.category} • {product.condition}
                 </Typography>
-                <Button 
-                  variant="contained" 
-                  color="primary" 
-                  startIcon={<AddShoppingCartIcon />} 
-                  onClick={() => handleAddToCart({
-                    id: product.id,
-                    title: product.title,
-                    price: product.price,
-                    image: product.image,
-                  })}
-                  sx={{ mt: 2, alignSelf: 'center' }}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<AddShoppingCartIcon />}
+                  onClick={() =>
+                    handleAddToCart({
+                      id: product.id,
+                      title: product.title,
+                      price: product.price,
+                      image: product.image,
+                    })
+                  }
+                  sx={{ mt: 2, alignSelf: "center" }}
                 >
                   Add to Cart
                 </Button>
