@@ -16,9 +16,14 @@ import {
   Paper,
   InputAdornment,
   IconButton,
+  Button,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import { useDispatch } from 'react-redux';
+import { addItemToCart, CartItem } from "../store/cartSlice";
+import { AppDispatch } from "../store";
 
 // Mock data for initial development
 const mockProducts = [
@@ -53,6 +58,7 @@ const ProductPage: React.FC = () => {
   const [selectedCondition, setSelectedCondition] = useState("All");
   const [priceRange, setPriceRange] = useState<number[]>([0, 2000]);
   const [showFilters, setShowFilters] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -105,6 +111,11 @@ const ProductPage: React.FC = () => {
           return 0;
       }
     });
+
+  const handleAddToCart = (product: Omit<CartItem, 'quantity'>) => {
+    console.log("handleAddToCart called with:", product);
+    dispatch(addItemToCart(product));
+  };
 
   return (
     <Container
@@ -249,9 +260,23 @@ const ProductPage: React.FC = () => {
                 <Typography variant="h5" color="primary" sx={{ fontWeight: 'bold', mb: 1 }}>
                   ${product.price}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 'auto' }}> {/* Pushes to bottom if card content is taller */}
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 'auto' }}>
                   {product.category} • {product.condition}
                 </Typography>
+                <Button 
+                  variant="contained" 
+                  color="primary" 
+                  startIcon={<AddShoppingCartIcon />} 
+                  onClick={() => handleAddToCart({
+                    id: product.id,
+                    title: product.title,
+                    price: product.price,
+                    image: product.image,
+                  })}
+                  sx={{ mt: 2, alignSelf: 'center' }}
+                >
+                  Add to Cart
+                </Button>
               </CardContent>
             </Card>
           </Grid>

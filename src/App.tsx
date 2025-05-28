@@ -12,6 +12,7 @@ import Register from "./components/Register";
 import AuthAnim from "./components/AuthAnim";
 import ProductPage from "./components/ProductPage.tsx";
 import Profile from "./components/Profile.tsx";
+import CartPage from "./components/CartPage.tsx";
 import { useTheme } from "./context/ThemeContext";
 
 // Create a client
@@ -72,6 +73,14 @@ function App() {
                 element={
                   <ProtectedRoute includeNavbar>
                     <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/cart"
+                element={
+                  <ProtectedRoute includeNavbar>
+                    <CartPage />
                   </ProtectedRoute>
                 }
               />
