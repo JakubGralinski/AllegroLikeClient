@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import gsap from 'gsap';
-import { Box } from '@mui/material';
+import React, { useEffect } from "react";
+import gsap from "gsap";
+import { Box } from "@mui/material";
 
 const wave1Shapes = [
   // Original
@@ -10,7 +10,7 @@ const wave1Shapes = [
   // Morph 2
   "M0,1200 C1200,1000 1800,1400 3000,1200 L3000,1600 L0,1600 Z",
   // Morph 3
-  "M0,1200 C900,1300 2100,1100 3000,1200 L3000,1600 L0,1600 Z"
+  "M0,1200 C900,1300 2100,1100 3000,1200 L3000,1600 L0,1600 Z",
 ];
 
 const wave2Shapes = [
@@ -21,13 +21,13 @@ const wave2Shapes = [
   // Morph 2
   "M0,1400 C1400,1200 1600,1800 3000,1400 L3000,1600 L0,1600 Z",
   // Morph 3
-  "M0,1400 C900,1700 1980,1100 3000,1400 L3000,1600 L0,1600 Z"
+  "M0,1400 C900,1700 1980,1100 3000,1400 L3000,1600 L0,1600 Z",
 ];
 
 const AuthAnim: React.FC = () => {
   useEffect(() => {
-    const wave1 = document.getElementById('wavePath1');
-    const wave2 = document.getElementById('wavePath2');
+    const wave1 = document.getElementById("wavePath1");
+    const wave2 = document.getElementById("wavePath2");
     if (!wave1 || !wave2) return;
 
     // Animate wave1 through multiple shapes
@@ -36,11 +36,11 @@ const AuthAnim: React.FC = () => {
       gsap.to(wave1, {
         attr: { d: wave1Shapes[wave1Index % wave1Shapes.length] },
         duration: 4,
-        ease: 'sine.inOut',
+        ease: "sine.inOut",
         onComplete: () => {
           wave1Index++;
           animateWave1();
-        }
+        },
       });
     };
     animateWave1();
@@ -51,11 +51,11 @@ const AuthAnim: React.FC = () => {
       gsap.to(wave2, {
         attr: { d: wave2Shapes[wave2Index % wave2Shapes.length] },
         duration: 6,
-        ease: 'sine.inOut',
+        ease: "sine.inOut",
         onComplete: () => {
           wave2Index++;
           animateWave2();
-        }
+        },
       });
     };
     animateWave2();
@@ -71,14 +71,34 @@ const AuthAnim: React.FC = () => {
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="none"
-        style={{ position: 'absolute', top: 0, left: 0, width: '100vw', height: '100vh' }}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+        }}
       >
         <defs>
-          <linearGradient id="waveGradient1" x1="0" y1="0" x2="3000" y2="0" gradientUnits="userSpaceOnUse">
+          <linearGradient
+            id="waveGradient1"
+            x1="0"
+            y1="0"
+            x2="3000"
+            y2="0"
+            gradientUnits="userSpaceOnUse"
+          >
             <stop stopColor="#2196f3" />
             <stop offset="1" stopColor="#9c27b0" />
           </linearGradient>
-          <linearGradient id="waveGradient2" x1="0" y1="0" x2="3000" y2="0" gradientUnits="userSpaceOnUse">
+          <linearGradient
+            id="waveGradient2"
+            x1="0"
+            y1="0"
+            x2="3000"
+            y2="0"
+            gradientUnits="userSpaceOnUse"
+          >
             <stop stopColor="#42a5f5" />
             <stop offset="1" stopColor="#ce93d8" />
           </linearGradient>
@@ -100,4 +120,4 @@ const AuthAnim: React.FC = () => {
   );
 };
 
-export default AuthAnim; 
+export default AuthAnim;

@@ -1,9 +1,9 @@
+import { Routes, Route, Navigate } from "react-router-dom";
 import {
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import { ThemeProvider as MuiThemeProvider, createTheme, PaletteMode } from "@mui/material";
+  ThemeProvider as MuiThemeProvider,
+  createTheme,
+  PaletteMode,
+} from "@mui/material";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./components/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -36,7 +36,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <MuiThemeProvider theme={muiTheme}>
-        <div className={`min-h-screen ${appTheme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
+        <div
+          className={`min-h-screen absolute min-w-screen top-0 left-0 ${appTheme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}
+        >
           <AuthProvider>
             <Routes>
               <Route
@@ -66,12 +68,12 @@ function App() {
                 }
               />
               <Route
-                  path="/profile"
-                  element={
-                    <ProtectedRoute includeNavbar>
-                      <Profile />
-                    </ProtectedRoute>
-                  }
+                path="/profile"
+                element={
+                  <ProtectedRoute includeNavbar>
+                    <Profile />
+                  </ProtectedRoute>
+                }
               />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
