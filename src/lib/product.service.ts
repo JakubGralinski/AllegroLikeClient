@@ -1,22 +1,10 @@
-import axios from 'axios';
-import authService from './auth.service';
+import axios from "axios";
+import authService from "./auth.service";
+import { BASE_API_URL } from "./constants";
+import { Product, Result } from "./types";
+import { handleApiResponseError } from "./utils";
 
-const API_URL = 'http://localhost:8080/api/products';
-
-export interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  imageUrl: string;
-  category: string;
-  seller: {
-    id: number;
-    username: string;
-  };
-  createdAt: string;
-  updatedAt: string;
-}
+const API_URL = `${BASE_API_URL}products`;
 
 export interface ProductFilters {
   search?: string;
@@ -27,16 +15,17 @@ export interface ProductFilters {
   size?: number;
 }
 
-export interface ProductResponse {
-  content: Product[];
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number;
+export interface CreateProductRequest {
+  name: string;
+  description: string;
+  price: number;
+  stockQuantity: number;
+  sellerId: number;
+  categoryId: number;
 }
 
 class ProductService {
-  async getAllProducts(filters: ProductFilters = {}): Promise<ProductResponse> {
+  async getAllProducts(filters: ProductFilters = {}): Promise<Product[]> {
     const token = authService.getCurrentUser();
     const response = await axios.get(API_URL, {
       params: filters,
@@ -57,14 +46,33 @@ class ProductService {
     return response.data;
   }
 
-  async createProduct(product: Omit<Product, 'id' | 'createdAt' | 'updatedAt' | 'seller'>): Promise<Product> {
+  async createProduct(
+    product: CreateProductRequest,
+    productImage: File,
+  ): Promise<Result<Product>> {
     const token = authService.getCurrentUser();
-    const response = await axios.post(API_URL, product, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const formDataPayload = new FormData();
+    const productDataBlob = new Blob([JSON.stringify(product)], {
+      type: "application/json",
     });
-    return response.data;
+
+    formDataPayload.append("productData", productDataBlob);
+    formDataPayload.append("productImage", productImage);
+
+    try {
+      const response = await axios.post(API_URL, formDataPayload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return {
+        isSuccess: true,
+        content: response.data,
+      };
+    } catch (err: any) {
+      return handleApiResponseError(err);
+    }
   }
 
   async updateProduct(id: number, product: Partial<Product>): Promise<Product> {
@@ -87,4 +95,4 @@ class ProductService {
   }
 }
 
-export default new ProductService(); 
+export default new ProductService();

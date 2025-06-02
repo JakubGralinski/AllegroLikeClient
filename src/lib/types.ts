@@ -20,6 +20,7 @@ export type Product = {
   description: string;
   price: number;
   stockQuantity: number;
+  imageUrl: string;
   seller: User;
   category: Category;
 };
