@@ -99,7 +99,7 @@ function CreateProduct(): ReactNode {
       onSubmit={(e) => handleSubmit(e)}
       className="flex flex-col items-center justify-center text-center h-screen gap-3"
     >
-      <h2 className="text-black font-semibold text-xl mb-10">
+      <h2 className="font-semibold text-xl mb-10">
         Fill this form to create a new product with you as the seller
       </h2>
 
@@ -121,7 +121,7 @@ function CreateProduct(): ReactNode {
       />
 
       <div className="flex flex-col w-full">
-        <label className="text-black font-medium self-start">Price</label>
+        <label className="font-medium self-start">Price</label>
         <input
           type="number"
           value={price}
@@ -129,21 +129,19 @@ function CreateProduct(): ReactNode {
           min="0"
           onChange={(e) => setPrice(Number(e.target.value))}
           required
-          className="bg-gray-200 p-2 rounded-lg"
+          className="bg-gray-200 p-2 rounded-lg text-black"
         />
       </div>
 
       <div className="flex flex-col w-full">
-        <label className="text-black font-medium self-start">
-          Stock Quantity
-        </label>
+        <label className="font-medium self-start">Stock Quantity</label>
         <input
           type="number"
           value={stockQuantity}
           onChange={(e) => setStockQuantity(Number(e.target.value))}
           min="0"
           required
-          className="bg-gray-200 p-2 rounded-lg"
+          className="bg-gray-200 p-2 rounded-lg text-black"
         />
       </div>
 
@@ -183,7 +181,7 @@ function CreateProduct(): ReactNode {
           />
 
           <div className="flex flex-col w-full">
-            <label className="text-black font-medium self-start">
+            <label className="font-medium self-start">
               Parent Category (optional)
             </label>
             <select
@@ -216,7 +214,7 @@ function CreateProduct(): ReactNode {
           setProductImage(e.target.files?.[0] || null)
         }
         required
-        className="w-full p-2 text-black rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:cursor-pointer"
+        className="w-full p-2 rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:cursor-pointer"
       />
 
       <button
