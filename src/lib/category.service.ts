@@ -8,7 +8,7 @@ const API_URL = `${BASE_API_URL}categories`;
 
 export interface CreateCategoryPayload {
   name: string;
-  parentCategoryId: number;
+  parentCategoryId: number | null;
 }
 
 class CategoryService {
