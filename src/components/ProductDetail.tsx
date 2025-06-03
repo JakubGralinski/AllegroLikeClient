@@ -15,6 +15,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import productService from "../lib/product.service";
 import { useAuth } from "./AuthContext";
+import { Product, Result } from "../lib/types";
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -22,16 +23,13 @@ const ProductDetail: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const [quantity, setQuantity] = useState<number>(1);
 
-  const {
-    data: product,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
+  const { data, isLoading, isError, error } = useQuery<Result<Product>, Error>({
     queryKey: ["product", id],
     queryFn: () => productService.getProductById(Number(id)),
     enabled: !!id,
   });
+
+  const product = data?.isSuccess ? data.content : undefined;
 
   const handleAddToCart = () => {
     // This would be implemented with a cart service
@@ -108,7 +106,7 @@ const ProductDetail: React.FC = () => {
 
             <Box sx={{ mb: 3 }}>
               <Typography variant="subtitle1" gutterBottom>
-                Category: {product.category}
+                Category: {product.category.name}
               </Typography>
               {/* <Typography variant="body2" color="text.secondary">
                 Listed on: {new Date(product.createdAt).toLocaleDateString()}
