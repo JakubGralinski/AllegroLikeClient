@@ -21,9 +21,10 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart, CartItem } from "../store/cartSlice";
-import { AppDispatch } from "../store";
+import { AppDispatch, RootState } from "../store";
+import { Link } from "react-router-dom";
 
 // Mock data for initial development
 const mockProducts = [
@@ -58,6 +59,8 @@ const ProductPage: React.FC = () => {
   const [selectedCondition, setSelectedCondition] = useState("All");
   const [priceRange, setPriceRange] = useState<number[]>([0, 2000]);
   const [showFilters, setShowFilters] = useState(false);
+  const user = useSelector((state: RootState) => state.auth.user);
+  const isAdmin = user?.role === "ROLE_ADMIN";
   const dispatch = useDispatch<AppDispatch>();
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -303,6 +306,14 @@ const ProductPage: React.FC = () => {
           </Grid>
         ))}
       </Grid>
+      {isAdmin && (
+        <Link
+          to={"/createProduct"}
+          className="p-3 bg-primary font-semibold rounded-lg text-white mt-10 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-[1.02] hover:shadow-md"
+        >
+          Create new product
+        </Link>
+      )}
     </Container>
   );
 };
