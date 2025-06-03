@@ -110,9 +110,9 @@ const ProductDetail: React.FC = () => {
               <Typography variant="subtitle1" gutterBottom>
                 Category: {product.category}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              {/* <Typography variant="body2" color="text.secondary">
                 Listed on: {new Date(product.createdAt).toLocaleDateString()}
-              </Typography>
+              </Typography> */}
             </Box>
 
             {isAuthenticated && (

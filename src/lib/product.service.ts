@@ -25,25 +25,44 @@ export interface CreateProductRequest {
 }
 
 class ProductService {
-  async getAllProducts(filters: ProductFilters = {}): Promise<Product[]> {
+  async getAllProducts(
+    filters: ProductFilters = {},
+  ): Promise<Result<Product[]>> {
     const token = authService.getCurrentUser();
-    const response = await axios.get(API_URL, {
-      params: filters,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
+    try {
+      const response = await axios.get(API_URL, {
+        params: filters,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return {
+        isSuccess: true,
+        content: response.data,
+      };
+    } catch (err: any) {
+      return handleApiResponseError(err);
+    }
   }
 
-  async getProductById(id: number): Promise<Product> {
+  async getProductById(id: number): Promise<Result<Product>> {
     const token = authService.getCurrentUser();
-    const response = await axios.get(`${API_URL}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
+
+    try {
+      const response = await axios.get(`${API_URL}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return {
+        isSuccess: true,
+        content: response.data,
+      };
+    } catch (err: any) {
+      return handleApiResponseError(err);
+    }
   }
 
   async createProduct(
@@ -75,23 +94,43 @@ class ProductService {
     }
   }
 
-  async updateProduct(id: number, product: Partial<Product>): Promise<Product> {
+  async updateProduct(
+    id: number,
+    product: Partial<Product>,
+  ): Promise<Result<Product>> {
     const token = authService.getCurrentUser();
-    const response = await axios.put(`${API_URL}/${id}`, product, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
+
+    try {
+      const response = await axios.put(`${API_URL}/${id}`, product, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return {
+        isSuccess: true,
+        content: response.data,
+      };
+    } catch (err: any) {
+      return handleApiResponseError(err);
+    }
   }
 
-  async deleteProduct(id: number): Promise<void> {
+  async deleteProduct(id: number): Promise<Result<void>> {
     const token = authService.getCurrentUser();
-    await axios.delete(`${API_URL}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+
+    try {
+      await axios.delete(`${API_URL}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return {
+        isSuccess: true,
+        content: undefined,
+      };
+    } catch (err: any) {
+      return handleApiResponseError(err);
+    }
   }
 }
 
