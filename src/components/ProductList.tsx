@@ -19,10 +19,8 @@ import {
   Alert,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import productService, {
-  Product,
-  ProductFilters,
-} from "../lib/product.service";
+import productService, { ProductFilters } from "../lib/product.service";
+import { Product, Result } from "../lib/types";
 
 const ProductList: React.FC = () => {
   const navigate = useNavigate();
@@ -53,10 +51,15 @@ const ProductList: React.FC = () => {
     }));
   }, [category, priceRange]);
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error } = useQuery<
+    Result<Product[]>,
+    Error
+  >({
     queryKey: ["products", filters],
     queryFn: () => productService.getAllProducts(filters),
   });
+
+  const products = data?.isSuccess ? data.content : [];
 
   const handlePageChange = (value: number) => {
     setFilters((prev) => ({ ...prev, page: value - 1 }));
@@ -140,7 +143,7 @@ const ProductList: React.FC = () => {
 
       {/* Product Grid */}
       <Grid container spacing={3}>
-        {data?.content.map((product: Product) => (
+        {products.map((product: Product) => (
           <Grid
             item
             key={product.id}
@@ -196,10 +199,10 @@ const ProductList: React.FC = () => {
       </Grid>
 
       {/* Pagination */}
-      {data && data.totalPages > 1 && (
+      {data && filters.page && products.length / filters.page > 1 && (
         <Box display="flex" justifyContent="center" mt={4}>
           <Pagination
-            count={data.totalPages}
+            count={products.length / filters.page}
             page={filters.page ? filters.page + 1 : 1}
             onChange={(_, value) => handlePageChange(value)}
             color="primary"
