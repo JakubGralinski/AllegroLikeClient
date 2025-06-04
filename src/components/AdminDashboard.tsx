@@ -160,7 +160,7 @@ const RidgelineChart: React.FC = () => {
 
       const areaPath = d3.area<{ x: number, y: number }>()
         .x(d => x(d.x))
-        .y0(d => yGlobal(0) - offset)
+        .y0(_ => yGlobal(0) - offset)
         .y1(d => yGlobal(d.y) - offset)
         .curve(d3.curveBasis);
       svg.append('path')
@@ -170,7 +170,7 @@ const RidgelineChart: React.FC = () => {
         .attr('stroke', 'none')
         .attr('d', areaPath)
         .attr('transform', `translate(${margin.left},${margin.top})`)
-        .on('mousemove', function(event, d) {
+        .on('mousemove', function(event, _) {
           const [mx, my] = d3.pointer(event, svgRef.current);
           const xm = x.invert(mx - margin.left);
           const closest = cat.values.reduce((a, b) => Math.abs(b.x - xm) < Math.abs(a.x - xm) ? b : a);
@@ -260,7 +260,6 @@ const AdminDashboard: React.FC = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [salesData, setSalesData] = useState<SalesData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [selectedDataSet, setSelectedDataSet] = useState<keyof typeof sampleDataSets>('monthly');
   const [dimensions, setDimensions] = useState({ width: 800, height: 400 });
   const [tooltip, setTooltip] = useState<{x: number, y: number, value: number, label: string} | null>(null);
@@ -405,7 +404,6 @@ const AdminDashboard: React.FC = () => {
   }, [salesData, dimensions]);
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="admin-dashboard">

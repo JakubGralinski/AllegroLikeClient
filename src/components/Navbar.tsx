@@ -2,26 +2,18 @@ import {Link, useLocation} from "react-router-dom";
 import {ADMIN, navigations} from "../lib/constants.ts";
 import {useSelector} from "react-redux";
 import {RootState} from "../store";
-import { useState } from "react";
 import ThemeToggleButton from "./ThemeToggleButton";
 import { useAuth } from "./AuthContext";
 
 function Navbar() {
     const location = useLocation();
     const user = useSelector((state: RootState) => state.auth.user);
-    const [isMobileOpen, setIsMobileOpen] = useState(false);
     const { logout } = useAuth();
 
     const trueNavigations = [...navigations];
 
     if (user?.role === ADMIN) {
         trueNavigations.push({ title: "Admin", to: "/admin" });
-    }
-
-    function toggleIsMobileOpen() {
-        if (window.innerWidth < 800) {
-            setIsMobileOpen(!isMobileOpen);
-        }
     }
 
     return (
