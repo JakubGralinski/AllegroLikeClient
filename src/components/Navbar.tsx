@@ -9,11 +9,13 @@ function Navbar() {
 
     const trueNavigations = [...navigations];
 
-    // Treat user with username 'admin' as admin for now
-    if (/*user?.role === ADMIN ||*/ user?.username === 'kuba1') {
-        trueNavigations.push(
-            { title: "Admin", to: "/admin" },
-        );
+  if (user?.role === ADMIN) {
+    trueNavigations.push({ title: "Admin", to: "/admin" });
+  }
+
+  function toggleIsMobileOpen() {
+    if (window.innerWidth < 800) {
+      setIsMobileOpen(!isMobileOpen);
     }
 
     return (

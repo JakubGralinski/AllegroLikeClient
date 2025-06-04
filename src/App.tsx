@@ -14,6 +14,8 @@ import AuthAnim from "./components/AuthAnim";
 import ProductPage from "./components/ProductPage.tsx";
 import Profile from "./components/Profile.tsx";
 import AdminDashboard from "./components/AdminDashboard";
+import CartPage from "./components/CartPage.tsx";
+import { useTheme } from "./context/ThemeContext";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -64,6 +66,12 @@ function App() {
                 }
               />
               <Route
+                path="/cart"
+                element={
+                  <ProtectedRoute includeNavbar>
+                    <CartPage />
+                  </ProtectedRoute>
+                }
                   path="/profile"
                   element={
                     <ProtectedRoute includeNavbar>

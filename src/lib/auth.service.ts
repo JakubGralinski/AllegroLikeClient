@@ -1,6 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import {JWT_TOKEN_COOKIE_NAME} from "./constants.ts";
+import {User} from "./types.ts";
 
 const API_URL = "http://localhost:8080/api/auth";
 
@@ -17,8 +18,7 @@ export interface RegisterRequest {
 
 export interface AuthResponse {
   token: string;
-  username: string;
-  role: string;
+  user: User;
 }
 
 class AuthService {
@@ -28,11 +28,7 @@ class AuthService {
       if (response.data.token) {
         Cookies.set(JWT_TOKEN_COOKIE_NAME, response.data.token, { expires: 1 });
       }
-      return {
-        token: response.data.token,
-        username: response.data.user.username,
-        role: response.data.user.role,
-      };
+      return response.data;
     } catch (error: any) {
       if (error.response) {
         throw new Error(error.response.data || "Login failed");
@@ -47,11 +43,7 @@ class AuthService {
       if (response.data.token) {
         Cookies.set(JWT_TOKEN_COOKIE_NAME, response.data.token, { expires: 1 });
       }
-      return {
-        token: response.data.token,
-        username: response.data.user.username,
-        role: response.data.user.role,
-      };
+      return response.data;
     } catch (error: any) {
       console.error(
         "Registration error:",
@@ -80,11 +72,10 @@ class AuthService {
         },
       });
 
-      const user = response.data.user;
+      const authResponse: AuthResponse = response.data;
       return {
-        token: response.data.token,
-        role: user.role,
-        username: user.username,
+        token,
+        user: authResponse.user
       };
     } catch (error) {
       console.error("Token check failed", error);
