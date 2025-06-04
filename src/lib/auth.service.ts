@@ -28,7 +28,11 @@ class AuthService {
       if (response.data.token) {
         Cookies.set(JWT_TOKEN_COOKIE_NAME, response.data.token, { expires: 1 });
       }
-      return response.data;
+      return {
+        token: response.data.token,
+        username: response.data.user.username,
+        role: response.data.user.role,
+      };
     } catch (error: any) {
       if (error.response) {
         throw new Error(error.response.data || "Login failed");
@@ -43,7 +47,11 @@ class AuthService {
       if (response.data.token) {
         Cookies.set(JWT_TOKEN_COOKIE_NAME, response.data.token, { expires: 1 });
       }
-      return response.data;
+      return {
+        token: response.data.token,
+        username: response.data.user.username,
+        role: response.data.user.role,
+      };
     } catch (error: any) {
       console.error(
         "Registration error:",
@@ -72,9 +80,9 @@ class AuthService {
         },
       });
 
-      const user = response.data;
+      const user = response.data.user;
       return {
-        token,
+        token: response.data.token,
         role: user.role,
         username: user.username,
       };
