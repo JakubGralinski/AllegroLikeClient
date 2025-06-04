@@ -32,64 +32,78 @@ const theme = createTheme({
   },
 });
 
+function AppContent() {
+  const { theme: appTheme } = useTheme();
+  
+  return (
+    <div className={`min-h-screen transition-colors duration-300 ${
+      appTheme === 'dark' 
+        ? 'bg-gray-900 text-white' 
+        : 'bg-white text-gray-900'
+    }`}>
+      <Routes>
+        <Route
+          path="/login"
+          element={
+            <>
+              <AuthAnim />
+              <Login />
+            </>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <>
+              <AuthAnim />
+              <Register />
+            </>
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute includeNavbar>
+              <ProductPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute includeNavbar>
+              <CartPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute includeNavbar>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute includeNavbar>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </div>
+  );
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <AuthProvider>
-          <Router>
-            <Routes>
-              <Route
-                path="/login"
-                element={
-                  <>
-                    <AuthAnim />
-                    <Login />
-                  </>
-                }
-              />
-              <Route
-                path="/register"
-                element={
-                  <>
-                    <AuthAnim />
-                    <Register />
-                  </>
-                }
-              />
-              <Route
-                path="/"
-                element={
-                  <ProtectedRoute includeNavbar>
-                    <ProductPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/cart"
-                element={
-                  <ProtectedRoute includeNavbar>
-                    <CartPage />
-                  </ProtectedRoute>
-                }
-                  path="/profile"
-                  element={
-                    <ProtectedRoute includeNavbar>
-                      <Profile />
-                    </ProtectedRoute>
-                  }
-              />
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute includeNavbar>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </Router>
+          <AppContent />
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>

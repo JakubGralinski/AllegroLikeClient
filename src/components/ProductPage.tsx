@@ -17,6 +17,7 @@ import {
   InputAdornment,
   IconButton,
   Button,
+  useTheme as useMuiTheme,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
@@ -24,6 +25,7 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { useDispatch } from "react-redux";
 import { addItemToCart, CartItem } from "../store/cartSlice";
 import { AppDispatch } from "../store";
+import { useTheme } from "../context/ThemeContext";
 
 // Mock data for initial development
 const mockProducts = [
@@ -59,6 +61,10 @@ const ProductPage: React.FC = () => {
   const [priceRange, setPriceRange] = useState<number[]>([0, 2000]);
   const [showFilters, setShowFilters] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
+  
+  // Theme context
+  const { theme: appTheme } = useTheme();
+  const muiTheme = useMuiTheme();
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -132,10 +138,32 @@ const ProductPage: React.FC = () => {
               placeholder="Search products..."
               value={searchQuery}
               onChange={handleSearch}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  backgroundColor: appTheme === 'dark' ? muiTheme.palette.grey[800] : 'white',
+                  color: appTheme === 'dark' ? 'white' : 'inherit',
+                  '& fieldset': {
+                    borderColor: appTheme === 'dark' ? muiTheme.palette.grey[600] : muiTheme.palette.grey[300],
+                  },
+                  '&:hover fieldset': {
+                    borderColor: appTheme === 'dark' ? muiTheme.palette.grey[500] : muiTheme.palette.grey[400],
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: muiTheme.palette.primary.main,
+                  },
+                },
+                '& .MuiInputLabel-root': {
+                  color: appTheme === 'dark' ? muiTheme.palette.grey[400] : 'inherit',
+                },
+                '& .MuiInputBase-input::placeholder': {
+                  color: appTheme === 'dark' ? muiTheme.palette.grey[500] : muiTheme.palette.grey[600],
+                  opacity: 1,
+                },
+              }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon />
+                    <SearchIcon sx={{ color: appTheme === 'dark' ? muiTheme.palette.grey[400] : 'inherit' }} />
                   </InputAdornment>
                 ),
               }}
@@ -144,18 +172,51 @@ const ProductPage: React.FC = () => {
           <Grid item xs={12} md={4} component={"div" as React.ElementType}>
             <Box sx={{ display: "flex", gap: 2 }}>
               <FormControl fullWidth>
-                <InputLabel>Sort By</InputLabel>
+                <InputLabel sx={{ color: appTheme === 'dark' ? muiTheme.palette.grey[400] : 'inherit' }}>Sort By</InputLabel>
                 <Select
                   value={sortBy}
                   onChange={handleSortChange}
                   label="Sort By"
+                  sx={{
+                    backgroundColor: appTheme === 'dark' ? muiTheme.palette.grey[800] : 'white',
+                    color: appTheme === 'dark' ? 'white' : 'inherit',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: appTheme === 'dark' ? muiTheme.palette.grey[600] : muiTheme.palette.grey[300],
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      borderColor: appTheme === 'dark' ? muiTheme.palette.grey[500] : muiTheme.palette.grey[400],
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: muiTheme.palette.primary.main,
+                    },
+                    '& .MuiSvgIcon-root': {
+                      color: appTheme === 'dark' ? muiTheme.palette.grey[400] : 'inherit',
+                    },
+                  }}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        backgroundColor: appTheme === 'dark' ? muiTheme.palette.grey[800] : 'white',
+                        color: appTheme === 'dark' ? 'white' : 'inherit',
+                      },
+                    },
+                  }}
                 >
                   <MenuItem value="date">Newest</MenuItem>
                   <MenuItem value="price-asc">Price: Low to High</MenuItem>
                   <MenuItem value="price-desc">Price: High to Low</MenuItem>
                 </Select>
               </FormControl>
-              <IconButton onClick={() => setShowFilters(!showFilters)}>
+              <IconButton 
+                onClick={() => setShowFilters(!showFilters)}
+                sx={{ 
+                  color: appTheme === 'dark' ? muiTheme.palette.grey[400] : 'inherit',
+                  backgroundColor: appTheme === 'dark' ? muiTheme.palette.grey[800] : 'transparent',
+                  '&:hover': {
+                    backgroundColor: appTheme === 'dark' ? muiTheme.palette.grey[700] : muiTheme.palette.grey[100],
+                  },
+                }}
+              >
                 <FilterListIcon />
               </IconButton>
             </Box>
@@ -165,15 +226,38 @@ const ProductPage: React.FC = () => {
 
       {/* Filters Panel */}
       {showFilters && (
-        <Paper sx={{ p: 2, mb: 4 }}>
+        <Paper sx={{ 
+          p: 2, 
+          mb: 4,
+          backgroundColor: appTheme === 'dark' ? muiTheme.palette.grey[800] : muiTheme.palette.background.paper,
+          color: appTheme === 'dark' ? 'white' : 'inherit',
+        }}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={4} component={"div" as React.ElementType}>
               <FormControl fullWidth>
-                <InputLabel>Category</InputLabel>
+                <InputLabel sx={{ color: appTheme === 'dark' ? muiTheme.palette.grey[400] : 'inherit' }}>Category</InputLabel>
                 <Select
                   value={selectedCategory}
                   onChange={handleCategoryChange}
                   label="Category"
+                  sx={{
+                    backgroundColor: appTheme === 'dark' ? muiTheme.palette.grey[700] : 'white',
+                    color: appTheme === 'dark' ? 'white' : 'inherit',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: appTheme === 'dark' ? muiTheme.palette.grey[600] : muiTheme.palette.grey[300],
+                    },
+                    '& .MuiSvgIcon-root': {
+                      color: appTheme === 'dark' ? muiTheme.palette.grey[400] : 'inherit',
+                    },
+                  }}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        backgroundColor: appTheme === 'dark' ? muiTheme.palette.grey[800] : 'white',
+                        color: appTheme === 'dark' ? 'white' : 'inherit',
+                      },
+                    },
+                  }}
                 >
                   {categories.map((category) => (
                     <MenuItem key={category} value={category}>
@@ -185,11 +269,29 @@ const ProductPage: React.FC = () => {
             </Grid>
             <Grid item xs={12} md={4} component={"div" as React.ElementType}>
               <FormControl fullWidth>
-                <InputLabel>Condition</InputLabel>
+                <InputLabel sx={{ color: appTheme === 'dark' ? muiTheme.palette.grey[400] : 'inherit' }}>Condition</InputLabel>
                 <Select
                   value={selectedCondition}
                   onChange={handleConditionChange}
                   label="Condition"
+                  sx={{
+                    backgroundColor: appTheme === 'dark' ? muiTheme.palette.grey[700] : 'white',
+                    color: appTheme === 'dark' ? 'white' : 'inherit',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: appTheme === 'dark' ? muiTheme.palette.grey[600] : muiTheme.palette.grey[300],
+                    },
+                    '& .MuiSvgIcon-root': {
+                      color: appTheme === 'dark' ? muiTheme.palette.grey[400] : 'inherit',
+                    },
+                  }}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        backgroundColor: appTheme === 'dark' ? muiTheme.palette.grey[800] : 'white',
+                        color: appTheme === 'dark' ? 'white' : 'inherit',
+                      },
+                    },
+                  }}
                 >
                   {conditions.map((condition) => (
                     <MenuItem key={condition} value={condition}>
@@ -200,7 +302,9 @@ const ProductPage: React.FC = () => {
               </FormControl>
             </Grid>
             <Grid item xs={12} md={4} component={"div" as React.ElementType}>
-              <Typography gutterBottom>Price Range</Typography>
+              <Typography gutterBottom sx={{ color: appTheme === 'dark' ? 'white' : 'inherit' }}>
+                Price Range
+              </Typography>
               <Slider
                 value={priceRange}
                 onChange={handlePriceRangeChange}
@@ -208,10 +312,26 @@ const ProductPage: React.FC = () => {
                 min={0}
                 max={2000}
                 step={50}
+                sx={{
+                  color: muiTheme.palette.primary.main,
+                  '& .MuiSlider-thumb': {
+                    backgroundColor: muiTheme.palette.primary.main,
+                  },
+                  '& .MuiSlider-track': {
+                    backgroundColor: muiTheme.palette.primary.main,
+                  },
+                  '& .MuiSlider-rail': {
+                    backgroundColor: appTheme === 'dark' ? muiTheme.palette.grey[600] : muiTheme.palette.grey[300],
+                  },
+                }}
               />
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography variant="body2">${priceRange[0]}</Typography>
-                <Typography variant="body2">${priceRange[1]}</Typography>
+                <Typography variant="body2" sx={{ color: appTheme === 'dark' ? muiTheme.palette.grey[400] : 'inherit' }}>
+                  ${priceRange[0]}
+                </Typography>
+                <Typography variant="body2" sx={{ color: appTheme === 'dark' ? muiTheme.palette.grey[400] : 'inherit' }}>
+                  ${priceRange[1]}
+                </Typography>
               </Box>
             </Grid>
           </Grid>
@@ -235,11 +355,12 @@ const ProductPage: React.FC = () => {
                 height: "100%",
                 display: "flex",
                 flexDirection: "column",
-                transition:
-                  "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
+                transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
+                backgroundColor: appTheme === 'dark' ? muiTheme.palette.grey[800] : muiTheme.palette.background.paper,
+                color: appTheme === 'dark' ? 'white' : 'inherit',
                 "&:hover": {
                   transform: "scale(1.03)",
-                  boxShadow: 6, // Corresponds to theme.shadows[6]
+                  boxShadow: appTheme === 'dark' ? `0 8px 32px rgba(255, 255, 255, 0.1)` : 6,
                 },
               }}
             >
@@ -248,8 +369,8 @@ const ProductPage: React.FC = () => {
                 image={product.image}
                 alt={product.title}
                 sx={{
-                  objectFit: "cover", // Ensures the image covers the area, might crop
-                  aspectRatio: "16/9", // Responsive aspect ratio for better design
+                  objectFit: "cover",
+                  aspectRatio: "16/9",
                 }}
               />
               <CardContent
@@ -264,7 +385,11 @@ const ProductPage: React.FC = () => {
                   gutterBottom
                   variant="h6"
                   component="h2"
-                  sx={{ fontWeight: "medium", mb: 1 }}
+                  sx={{ 
+                    fontWeight: "medium", 
+                    mb: 1,
+                    color: appTheme === 'dark' ? 'white' : 'inherit',
+                  }}
                 >
                   {product.title}
                 </Typography>
@@ -277,8 +402,10 @@ const ProductPage: React.FC = () => {
                 </Typography>
                 <Typography
                   variant="body2"
-                  color="text.secondary"
-                  sx={{ mt: "auto" }}
+                  sx={{ 
+                    mt: "auto",
+                    color: appTheme === 'dark' ? muiTheme.palette.grey[400] : 'text.secondary',
+                  }}
                 >
                   {product.category} • {product.condition}
                 </Typography>
