@@ -12,9 +12,9 @@ function Navbar() {
 
     const trueNavigations = [...navigations];
 
-    if (user?.role === ADMIN) {
-        trueNavigations.push({ title: "Admin", to: "/admin" });
-    }
+    //if (user?.role === ADMIN) {
+    trueNavigations.push({ title: "Admin", to: "/admin" });
+    //}
 
     return (
         <div className="top-[30vh] left-[2vw] w-40 h-[40vh] fixed border-2 border-gray-300 bg-slate-800 rounded-2xl flex flex-col justify-between items-center">
