@@ -15,6 +15,7 @@ import Profile from "./components/Profile.tsx";
 import AdminDashboard from "./components/AdminDashboard";
 import CartPage from "./components/CartPage.tsx";
 import { useTheme } from "./context/ThemeContext";
+import CreateProduct from "./components/CreateProduct.tsx";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -64,6 +65,14 @@ function AppContent() {
           element={
             <ProtectedRoute includeNavbar>
               <ProductPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/createProduct"
+          element={
+            <ProtectedRoute includeNavbar>
+              <CreateProduct />
             </ProtectedRoute>
           }
         />
