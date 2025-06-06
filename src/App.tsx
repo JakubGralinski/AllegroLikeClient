@@ -1,8 +1,4 @@
-import {
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./components/AuthContext";
@@ -34,13 +30,15 @@ const theme = createTheme({
 
 function AppContent() {
   const { theme: appTheme } = useTheme();
-  
+
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${
-      appTheme === 'dark' 
-        ? 'bg-gray-900 text-white' 
-        : 'bg-white text-gray-900'
-    }`}>
+    <div
+      className={`min-h-screen transition-colors duration-300 ${
+        appTheme === "dark"
+          ? "bg-gray-900 text-white"
+          : "bg-white text-gray-900"
+      }`}
+    >
       <Routes>
         <Route
           path="/login"
