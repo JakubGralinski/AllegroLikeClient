@@ -25,7 +25,7 @@ class UserService {
     const url = `${BASE_API_URL}users/${userId}/address/${addressId}`;
 
     try {
-      const response = await axios.put(url, {
+      const response = await axios.put(url, null, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },

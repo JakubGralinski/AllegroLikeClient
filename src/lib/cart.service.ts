@@ -34,7 +34,7 @@ class CartService {
     const url = `${API_URL}/items?productId=${productId}&quantity=${quantity}`;
 
     try {
-      const response = await axios.post(url, {
+      const response = await axios.post(url, null, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -57,7 +57,7 @@ class CartService {
     const url = `${API_URL}/items/${cartItemId}?quantity=${quantity}`;
 
     try {
-      const response = await axios.patch(url, {
+      const response = await axios.patch(url, null, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -78,6 +78,26 @@ class CartService {
 
     try {
       const response = await axios.delete(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return {
+        isSuccess: true,
+        content: response.data,
+      };
+    } catch (err: any) {
+      return handleApiResponseError(err);
+    }
+  }
+
+  async clearCart(): Promise<Result<Cart>> {
+    const token = authService.getCurrentUser();
+    const url = `${API_URL}/clear`;
+
+    try {
+      const response = await axios.post(url, null, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
