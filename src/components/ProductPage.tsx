@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Grid,
@@ -25,41 +25,29 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart, CartItem } from "../store/cartSlice";
 import { AppDispatch, RootState } from "../store";
 import { Link } from "react-router-dom";
-
-// Mock data for initial development
-const mockProducts = [
-  {
-    id: 1,
-    title: "iPhone 13 Pro",
-    price: 999.99,
-    image: "https://via.placeholder.com/200",
-    category: "Electronics",
-    condition: "New",
-    date: "2024-03-15",
-  },
-  {
-    id: 2,
-    title: "MacBook Air M2",
-    price: 1299.99,
-    image: "https://via.placeholder.com/200",
-    category: "Electronics",
-    condition: "New",
-    date: "2024-03-14",
-  },
-  // Add more mock products as needed
-];
-
-const categories = ["All", "Electronics", "Clothing", "Home", "Sports"];
-const conditions = ["All", "New", "Used", "Refurbished"];
+import { Product } from "../lib/types";
+import productService from "../lib/product.service";
+import { loadCategories, loadInventory } from "../store/products";
+import categoryService from "../lib/category.service";
+import { SERVER_URL } from "../lib/constants";
 
 const ProductPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState("date");
+  const [sortBy, setSortBy] = useState("price-asc");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedCondition, setSelectedCondition] = useState("All");
   const [priceRange, setPriceRange] = useState<number[]>([0, 2000]);
   const [showFilters, setShowFilters] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [filteredProducts, setFilteredProducts] = useState<Product[] | null>(
+    null,
+  );
+
   const user = useSelector((state: RootState) => state.auth.user);
+  const products = useSelector((state: RootState) => state.products.inventory);
+  const categories = useSelector(
+    (state: RootState) => state.products.categories,
+  );
   const isAdmin = user?.role === "ROLE_ADMIN";
   const dispatch = useDispatch<AppDispatch>();
 
@@ -75,10 +63,6 @@ const ProductPage: React.FC = () => {
     setSelectedCategory(event.target.value);
   };
 
-  const handleConditionChange = (event: any) => {
-    setSelectedCondition(event.target.value);
-  };
-
   const handlePriceRangeChange = (
     _event: Event,
     newValue: number | number[],
@@ -86,38 +70,90 @@ const ProductPage: React.FC = () => {
     setPriceRange(newValue as number[]);
   };
 
-  // Filter and sort products
-  const filteredProducts = mockProducts
-    .filter((product) => {
-      const matchesSearch = product.title
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-      const matchesCategory =
-        selectedCategory === "All" || product.category === selectedCategory;
-      const matchesCondition =
-        selectedCondition === "All" || product.condition === selectedCondition;
-      const matchesPrice =
-        product.price >= priceRange[0] && product.price <= priceRange[1];
-      return (
-        matchesSearch && matchesCategory && matchesCondition && matchesPrice
-      );
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case "price-asc":
-          return a.price - b.price;
-        case "price-desc":
-          return b.price - a.price;
-        case "date":
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
-        default:
-          return 0;
+  useEffect(() => {
+    async function fetchProducts(): Promise<void> {
+      setIsLoading(true);
+
+      try {
+        const productsRes = await productService.getAllProducts();
+        if (productsRes.isSuccess) {
+          dispatch(loadInventory(productsRes.content));
+          setError(null);
+        } else {
+          setError(productsRes.errMessage);
+        }
+      } finally {
+        setIsLoading(false);
       }
-    });
+    }
+
+    if (!products) {
+      fetchProducts();
+    }
+  }, [products, dispatch]);
+
+  useEffect(() => {
+    async function fetchCategories(): Promise<void> {
+      setIsLoading(true);
+
+      try {
+        const categoriesRes = await categoryService.getAllCategories();
+        if (categoriesRes.isSuccess) {
+          dispatch(loadCategories(categoriesRes.content));
+          setError(null);
+        } else {
+          setError(categoriesRes.errMessage);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    if (!categories) {
+      fetchCategories();
+    }
+  }, [categories, dispatch]);
+
+  useEffect(() => {
+    // Filter and sort products
+    if (products) {
+      const currentlyFilteredProducts = products
+        .filter((product) => {
+          const matchesSearch = product.name
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase());
+          const matchesCategory =
+            selectedCategory === "All" ||
+            product.category.name === selectedCategory;
+          const matchesPrice =
+            product.price >= priceRange[0] && product.price <= priceRange[1];
+          return matchesSearch && matchesCategory && matchesPrice;
+        })
+        .sort((a, b) => {
+          switch (sortBy) {
+            case "price-asc":
+              return a.price - b.price;
+            case "price-desc":
+              return b.price - a.price;
+            default:
+              return 0;
+          }
+        });
+      setFilteredProducts(currentlyFilteredProducts);
+    }
+  }, [priceRange, searchQuery, products, selectedCategory, sortBy]);
 
   const handleAddToCart = (product: Omit<CartItem, "quantity">) => {
     dispatch(addItemToCart(product));
   };
+
+  if (isLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center text-center font-extrabold text-3xl">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <Container
@@ -153,7 +189,6 @@ const ProductPage: React.FC = () => {
                   onChange={handleSortChange}
                   label="Sort By"
                 >
-                  <MenuItem value="date">Newest</MenuItem>
                   <MenuItem value="price-asc">Price: Low to High</MenuItem>
                   <MenuItem value="price-desc">Price: High to Low</MenuItem>
                 </Select>
@@ -178,25 +213,9 @@ const ProductPage: React.FC = () => {
                   onChange={handleCategoryChange}
                   label="Category"
                 >
-                  {categories.map((category) => (
-                    <MenuItem key={category} value={category}>
-                      {category}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={4} component={"div" as React.ElementType}>
-              <FormControl fullWidth>
-                <InputLabel>Condition</InputLabel>
-                <Select
-                  value={selectedCondition}
-                  onChange={handleConditionChange}
-                  label="Condition"
-                >
-                  {conditions.map((condition) => (
-                    <MenuItem key={condition} value={condition}>
-                      {condition}
+                  {categories?.map((category) => (
+                    <MenuItem key={category.name} value={category.name}>
+                      {category.name}
                     </MenuItem>
                   ))}
                 </Select>
@@ -223,7 +242,7 @@ const ProductPage: React.FC = () => {
 
       {/* Product Grid */}
       <Grid container spacing={3}>
-        {filteredProducts.map((product) => (
+        {filteredProducts?.map((product) => (
           <Grid
             item
             key={product.id}
@@ -248,11 +267,12 @@ const ProductPage: React.FC = () => {
             >
               <CardMedia
                 component="img"
-                image={product.image}
-                alt={product.title}
+                image={SERVER_URL + "/" + product.imageUrl}
+                alt={product.name}
                 sx={{
                   objectFit: "cover", // Ensures the image covers the area, might crop
-                  aspectRatio: "16/9", // Responsive aspect ratio for better design
+                  height: 180,
+                  width: "100%",
                 }}
               />
               <CardContent
@@ -269,7 +289,7 @@ const ProductPage: React.FC = () => {
                   component="h2"
                   sx={{ fontWeight: "medium", mb: 1 }}
                 >
-                  {product.title}
+                  {product.name}
                 </Typography>
                 <Typography
                   variant="h5"
@@ -283,7 +303,7 @@ const ProductPage: React.FC = () => {
                   color="text.secondary"
                   sx={{ mt: "auto" }}
                 >
-                  {product.category} • {product.condition}
+                  {product.category.name}
                 </Typography>
                 <Button
                   variant="contained"
@@ -292,9 +312,9 @@ const ProductPage: React.FC = () => {
                   onClick={() =>
                     handleAddToCart({
                       id: product.id,
-                      title: product.title,
+                      title: product.name,
                       price: product.price,
-                      image: product.image,
+                      image: product.imageUrl,
                     })
                   }
                   sx={{ mt: 2, alignSelf: "center" }}
@@ -313,6 +333,9 @@ const ProductPage: React.FC = () => {
         >
           Create new product
         </Link>
+      )}
+      {error && (
+        <div className="text-lg font-semibold text-secondary">{error}</div>
       )}
     </Container>
   );
