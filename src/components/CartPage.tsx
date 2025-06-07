@@ -12,7 +12,6 @@ import {
   IconButton,
   Button,
   Box,
-  // TextField, // No longer used
   Paper,
   Divider,
   useTheme as useMuiTheme,
@@ -58,6 +57,16 @@ const CartPage: React.FC = () => {
       handleRemoveItem(itemId);
     } else {
       setError("Quantity can not be negative");
+    }
+  };
+
+  const handleClearCart = async () => {
+    const cartRes = await cartService.clearCart();
+    if (cartRes.isSuccess) {
+      dispatch(loadCart(cartRes.content));
+      setError(null);
+    } else {
+      setError(cartRes.errMessage);
     }
   };
 
@@ -264,15 +273,23 @@ const CartPage: React.FC = () => {
           >
             Subtotal: ${calculateSubtotal()}
           </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ mt: 2 }}
-            component={RouterLink}
-            to="/checkout"
-          >
-            Proceed to Checkout
-          </Button>
+          <div className="flex flex-row-reverse items-center justify-center gap-5">
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ mt: 2 }}
+              component={RouterLink}
+              to="/checkout"
+            >
+              Proceed to Checkout
+            </Button>
+            <button
+              onClick={() => handleClearCart()}
+              className="bg-secondary text-white mt-4 p-2 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-[1.02] hover:shadow-md cursor-pointer"
+            >
+              CLEAR CART
+            </button>
+          </div>
         </Box>
       </Paper>
       {error && (
