@@ -31,6 +31,18 @@ export type Category = {
   parentCategory: Category | null;
 };
 
+export type Cart = {
+  id: number;
+  user: User;
+  cartItems: CartItem[];
+};
+
+export type CartItem = {
+  id: number;
+  product: Product;
+  quantity: number;
+};
+
 export type Result<T> =
   | {
       isSuccess: true;
