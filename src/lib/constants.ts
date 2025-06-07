@@ -16,6 +16,10 @@ export const navigations: { title: string; to: string }[] = [
     title: "Cart",
     to: "/cart",
   },
+  {
+    title: "Orders",
+    to: "/orders",
+  },
 ];
 
 export const ADMIN = "ROLE_ADMIN";

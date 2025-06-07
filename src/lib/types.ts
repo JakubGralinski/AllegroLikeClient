@@ -31,6 +31,21 @@ export type Category = {
   parentCategory: Category | null;
 };
 
+export type OrderItem = {
+  product: Product;
+  quantity: number;
+};
+
+export type Order = {
+  id: number;
+  placedAt: Date;
+  user: User;
+  status: string;
+  totalPrice: number;
+  shippingAddress: Address;
+  items: OrderItem[];
+};
+
 export type Result<T> =
   | {
       isSuccess: true;
