@@ -22,7 +22,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { useDispatch, useSelector } from "react-redux";
-import { addItemToCart, CartItem } from "../store/cartSlice";
 import { AppDispatch, RootState } from "../store";
 import { Link } from "react-router-dom";
 import { Product } from "../lib/types";
@@ -30,6 +29,9 @@ import productService from "../lib/product.service";
 import { loadCategories, loadInventory } from "../store/products";
 import categoryService from "../lib/category.service";
 import { SERVER_URL } from "../lib/constants";
+import cartService from "../lib/cart.service";
+import { loadCart } from "../store/cartSlice";
+import Notification from "./Notification";
 
 const ProductPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,12 +39,19 @@ const ProductPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [priceRange, setPriceRange] = useState<number[]>([0, 2000]);
   const [showFilters, setShowFilters] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [filteredProducts, setFilteredProducts] = useState<Product[] | null>(
     null,
   );
 
+  const [cartError, setCartError] = useState<string | null>(null);
+  const [productsError, setProductsError] = useState<string | null>(null);
+  const [categoriesError, setCategoriesError] = useState<string | null>(null);
+  const [notificationMessage, setNotificationMessage] = useState<string | null>(
+    null,
+  );
+
+  const cart = useSelector((state: RootState) => state.cart.userCart);
   const user = useSelector((state: RootState) => state.auth.user);
   const products = useSelector((state: RootState) => state.products.inventory);
   const categories = useSelector(
@@ -70,6 +79,65 @@ const ProductPage: React.FC = () => {
     setPriceRange(newValue as number[]);
   };
 
+  function showNotification(message: string) {
+    setNotificationMessage(message);
+    setTimeout(() => setNotificationMessage(null), 2500);
+  }
+
+  async function handleAddToCartClick(product: Product) {
+    if (cart) {
+      const cartItem = cart.cartItems.find(
+        (ci) => ci.product.id === product.id,
+      );
+      if (cartItem) {
+        const cartRes = await cartService.updateCartItem(
+          cartItem.id,
+          cartItem.quantity + 1,
+        );
+        if (cartRes.isSuccess) {
+          dispatch(loadCart(cartRes.content));
+          setCartError(null);
+          showNotification(
+            "Increased product quantity, as it already is in your cart",
+          );
+        } else {
+          setCartError(cartRes.errMessage);
+        }
+      } else {
+        const cartRes = await cartService.addItemToCart(product.id, 1);
+        if (cartRes.isSuccess) {
+          dispatch(loadCart(cartRes.content));
+          setCartError(null);
+          showNotification("Added product to your cart");
+        } else {
+          setCartError(cartRes.errMessage);
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    async function fetchCart(): Promise<void> {
+      setIsLoading(true);
+
+      try {
+        const cartRes = await cartService.getCart();
+        if (cartRes.isSuccess) {
+          dispatch(loadCart(cartRes.content));
+          setCartError(null);
+        } else {
+          setCartError(cartRes.errMessage);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    if (!cart) {
+      fetchCart();
+    }
+  }, [cart, dispatch]);
+
   useEffect(() => {
     async function fetchProducts(): Promise<void> {
       setIsLoading(true);
@@ -78,9 +146,9 @@ const ProductPage: React.FC = () => {
         const productsRes = await productService.getAllProducts();
         if (productsRes.isSuccess) {
           dispatch(loadInventory(productsRes.content));
-          setError(null);
+          setProductsError(null);
         } else {
-          setError(productsRes.errMessage);
+          setProductsError(productsRes.errMessage);
         }
       } finally {
         setIsLoading(false);
@@ -100,9 +168,9 @@ const ProductPage: React.FC = () => {
         const categoriesRes = await categoryService.getAllCategories();
         if (categoriesRes.isSuccess) {
           dispatch(loadCategories(categoriesRes.content));
-          setError(null);
+          setCategoriesError(null);
         } else {
-          setError(categoriesRes.errMessage);
+          setCategoriesError(categoriesRes.errMessage);
         }
       } finally {
         setIsLoading(false);
@@ -142,10 +210,6 @@ const ProductPage: React.FC = () => {
       setFilteredProducts(currentlyFilteredProducts);
     }
   }, [priceRange, searchQuery, products, selectedCategory, sortBy]);
-
-  const handleAddToCart = (product: Omit<CartItem, "quantity">) => {
-    dispatch(addItemToCart(product));
-  };
 
   if (isLoading) {
     return (
@@ -309,14 +373,7 @@ const ProductPage: React.FC = () => {
                   variant="contained"
                   color="primary"
                   startIcon={<AddShoppingCartIcon />}
-                  onClick={() =>
-                    handleAddToCart({
-                      id: product.id,
-                      title: product.name,
-                      price: product.price,
-                      image: product.imageUrl,
-                    })
-                  }
+                  onClick={() => handleAddToCartClick(product)}
                   sx={{ mt: 2, alignSelf: "center" }}
                 >
                   Add to Cart
@@ -334,9 +391,26 @@ const ProductPage: React.FC = () => {
           Create new product
         </Link>
       )}
-      {error && (
-        <div className="text-lg font-semibold text-secondary">{error}</div>
+      {(cartError || productsError || categoriesError) && (
+        <Box sx={{ mt: 2 }}>
+          {cartError && (
+            <div className="text-lg text-center font-semibold text-secondary mt-2">
+              {cartError}
+            </div>
+          )}
+          {productsError && (
+            <div className="text-lg text-center font-semibold text-secondar mt-2y">
+              {productsError}
+            </div>
+          )}
+          {categoriesError && (
+            <div className="text-lg text-center font-semibold text-secondary mt-2">
+              {categoriesError}
+            </div>
+          )}
+        </Box>
       )}
+      {notificationMessage && <Notification message={notificationMessage!} />}
     </Container>
   );
 };
