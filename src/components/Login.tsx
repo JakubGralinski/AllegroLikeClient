@@ -34,7 +34,7 @@ const Login: React.FC = () => {
   const [error, setError] = React.useState<string>("");
   const paperRef = React.useRef<HTMLDivElement>(null);
   const buttonRef = React.useRef<HTMLButtonElement>(null);
-  
+
   const { theme: appTheme } = useTheme();
   const muiTheme = useMuiTheme();
 
@@ -51,7 +51,7 @@ const Login: React.FC = () => {
       gsap.fromTo(
         paperRef.current,
         { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 1, ease: "power3.out" }
+        { opacity: 1, y: 0, duration: 1, ease: "power3.out" },
       );
     }
   }, []);
@@ -99,7 +99,7 @@ const Login: React.FC = () => {
           onComplete: () => {
             gsap.to(buttonRef.current, { x: 0, duration: 0.1 });
           },
-        }
+        },
       );
     }
   };
@@ -108,14 +108,14 @@ const Login: React.FC = () => {
 
   return (
     <>
-      <Container 
-        component="main" 
-        maxWidth="xs" 
-        sx={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center', 
-          justifyContent: 'center', 
+      <Container
+        component="main"
+        maxWidth="xs"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
           minHeight: 'calc(100vh - 64px)', // Assuming 64px navbar height
           backgroundColor: isDarkMode ? '#1a202c' : '#f7fafc', // Dark blue-grey for dark mode
         }}
@@ -125,7 +125,7 @@ const Login: React.FC = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            width: '100%', 
+            width: '100%',
           }}
         >
           <Paper

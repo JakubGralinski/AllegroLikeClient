@@ -1,8 +1,4 @@
-import {
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./components/AuthContext";
@@ -15,6 +11,7 @@ import Profile from "./components/Profile.tsx";
 import AdminDashboard from "./components/AdminDashboard";
 import CartPage from "./components/CartPage.tsx";
 import { useTheme } from "./context/ThemeContext";
+import CreateProduct from "./components/CreateProduct.tsx";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -33,13 +30,15 @@ const theme = createTheme({
 
 function AppContent() {
   const { theme: appTheme } = useTheme();
-  
+
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${
-      appTheme === 'dark' 
-        ? 'bg-gray-900 text-white' 
-        : 'bg-white text-gray-900'
-    }`}>
+    <div
+      className={`min-h-screen transition-colors duration-300 ${
+        appTheme === "dark"
+          ? "bg-gray-900 text-white"
+          : "bg-white text-gray-900"
+      }`}
+    >
       <Routes>
         <Route
           path="/login"
@@ -64,6 +63,14 @@ function AppContent() {
           element={
             <ProtectedRoute includeNavbar>
               <ProductPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/createProduct"
+          element={
+            <ProtectedRoute includeNavbar>
+              <CreateProduct />
             </ProtectedRoute>
           }
         />

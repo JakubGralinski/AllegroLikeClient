@@ -6,7 +6,6 @@ import {
     fetchSalesData,
     fetchCategoryTrendData,
     RidgelineCategoryData,
-    // SalesData is already imported if this file exports it, or define it locally if preferred
 } from '../lib/api';
 
 // Export SalesData if it's primarily used here and imported by api.ts
@@ -453,4 +452,4 @@ const AdminDashboard: React.FC = () => {
     );
 };
 
-export default AdminDashboard; 
+export default AdminDashboard;
