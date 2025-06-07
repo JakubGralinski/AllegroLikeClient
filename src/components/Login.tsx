@@ -104,27 +104,41 @@ const Login: React.FC = () => {
     }
   };
 
+  const isDarkMode = appTheme === 'dark';
+
   return (
     <>
-      <Container component="main" maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 64px - 64px)' /* Adjust if you have fixed header/footer heights */ }}>
+      <Container 
+        component="main" 
+        maxWidth="xs" 
+        sx={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          minHeight: 'calc(100vh - 64px)', // Assuming 64px navbar height
+          backgroundColor: isDarkMode ? '#1a202c' : '#f7fafc', // Dark blue-grey for dark mode
+        }}
+      >
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            width: '100%', // Ensure Box takes width of container
+            width: '100%', 
           }}
         >
           <Paper
             ref={paperRef}
-            elevation={3}
+            elevation={isDarkMode ? 5 : 3}
             sx={{
               padding: 4,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               width: "100%",
-              backgroundColor: appTheme === 'dark' ? muiTheme.palette.grey[900] : muiTheme.palette.background.paper,
+              backgroundColor: isDarkMode ? '#2d3748' : muiTheme.palette.background.paper, // Darker grey for form
+              color: isDarkMode ? '#fff' : 'inherit',
             }}
           >
             <Typography component="h1" variant="h5">
@@ -151,6 +165,23 @@ const Login: React.FC = () => {
                 {...register("username")}
                 error={!!errors.username}
                 helperText={errors.username?.message}
+                InputLabelProps={{
+                  style: { color: isDarkMode ? '#a0aec0' : 'inherit' },
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: isDarkMode ? '#4a5568' : 'rgba(0, 0, 0, 0.23)',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: isDarkMode ? '#718096' : 'rgba(0, 0, 0, 0.87)',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: isDarkMode ? muiTheme.palette.primary.main : muiTheme.palette.primary.main,
+                    },
+                    color: isDarkMode ? '#fff' : 'inherit',
+                  },
+                }}
               />
               <TextField
                 margin="normal"
@@ -163,13 +194,37 @@ const Login: React.FC = () => {
                 {...register("password")}
                 error={!!errors.password}
                 helperText={errors.password?.message}
+                InputLabelProps={{
+                  style: { color: isDarkMode ? '#a0aec0' : 'inherit' },
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: isDarkMode ? '#4a5568' : 'rgba(0, 0, 0, 0.23)',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: isDarkMode ? '#718096' : 'rgba(0, 0, 0, 0.87)',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: muiTheme.palette.primary.main,
+                    },
+                    color: isDarkMode ? '#fff' : 'inherit',
+                  },
+                }}
               />
               <Button
                 ref={buttonRef}
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ 
+                  mt: 3, 
+                  mb: 2,
+                  backgroundColor: isDarkMode ? '#3182ce' : muiTheme.palette.primary.main,
+                  '&:hover': {
+                    backgroundColor: isDarkMode ? '#2b6cb0' : muiTheme.palette.primary.dark,
+                  }
+                }}
               >
                 Sign In
               </Button>
@@ -181,14 +236,16 @@ const Login: React.FC = () => {
                   gap: 1,
                 }}
               >
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color={isDarkMode ? '#a0aec0' : 'text.secondary'}>
                   No Account?
                 </Typography>
                 <Button
                   variant="text"
-                  color="primary"
                   onClick={() => navigate("/register")}
-                  sx={{ textTransform: "none" }}
+                  sx={{ 
+                    textTransform: "none",
+                    color: isDarkMode ? '#63b3ed' : muiTheme.palette.primary.main,
+                  }}
                 >
                   Register
                 </Button>
