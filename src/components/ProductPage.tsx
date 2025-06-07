@@ -31,6 +31,7 @@ import categoryService from "../lib/category.service";
 import { SERVER_URL } from "../lib/constants";
 import cartService from "../lib/cart.service";
 import { loadCart } from "../store/cartSlice";
+import Notification from "./Notification";
 
 const ProductPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -46,6 +47,9 @@ const ProductPage: React.FC = () => {
   const [cartError, setCartError] = useState<string | null>(null);
   const [productsError, setProductsError] = useState<string | null>(null);
   const [categoriesError, setCategoriesError] = useState<string | null>(null);
+  const [notificationMessage, setNotificationMessage] = useState<string | null>(
+    null,
+  );
 
   const cart = useSelector((state: RootState) => state.cart.userCart);
   const user = useSelector((state: RootState) => state.auth.user);
@@ -75,6 +79,11 @@ const ProductPage: React.FC = () => {
     setPriceRange(newValue as number[]);
   };
 
+  function showNotification(message: string) {
+    setNotificationMessage(message);
+    setTimeout(() => setNotificationMessage(null), 2500);
+  }
+
   async function handleAddToCartClick(product: Product) {
     if (cart) {
       const cartItem = cart.cartItems.find(
@@ -88,6 +97,9 @@ const ProductPage: React.FC = () => {
         if (cartRes.isSuccess) {
           dispatch(loadCart(cartRes.content));
           setCartError(null);
+          showNotification(
+            "Increased product quantity, as it already is in your cart",
+          );
         } else {
           setCartError(cartRes.errMessage);
         }
@@ -96,6 +108,7 @@ const ProductPage: React.FC = () => {
         if (cartRes.isSuccess) {
           dispatch(loadCart(cartRes.content));
           setCartError(null);
+          showNotification("Added product to your cart");
         } else {
           setCartError(cartRes.errMessage);
         }
@@ -397,6 +410,7 @@ const ProductPage: React.FC = () => {
           )}
         </Box>
       )}
+      {notificationMessage && <Notification message={notificationMessage!} />}
     </Container>
   );
 };
