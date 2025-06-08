@@ -44,6 +44,7 @@ class OrderService {
       const response = await axios.post(url, createShippingAddressPayload, {
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       });
 
@@ -52,6 +53,13 @@ class OrderService {
         content: response.data,
       };
     } catch (err: any) {
+      if (err.response && err.response.status === 406) {
+        return {
+          isSuccess: false,
+          errMessage:
+            "Your profile does not have an address assigned to it, please go to Profile section and fill in your address data",
+        };
+      }
       return handleApiResponseError(err);
     }
   }

@@ -19,20 +19,27 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { loadCart } from "../store/cartSlice";
 import cartService from "../lib/cart.service";
+import AddressInputPopup from "./AddressInputPopup";
+import orderService from "../lib/order.service";
+import { addUserOrder, resetOrders } from "../store/orders";
 
 const CartPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { theme: appTheme } = useTheme();
   const muiTheme = useMuiTheme();
+  const navigate = useNavigate();
 
   const cart = useSelector((state: RootState) => state.cart.userCart);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isAddressInputPopupOpen, setIsAddressInputPopupOpen] =
+    useState<boolean>(false);
 
   const handleRemoveItem = async (itemId: number) => {
     const cartRes = await cartService.removeCartItem(itemId);
@@ -67,6 +74,42 @@ const CartPage: React.FC = () => {
       setError(null);
     } else {
       setError(cartRes.errMessage);
+    }
+  };
+
+  const reloadCart = async () => {
+    setIsLoading(true);
+
+    try {
+      const cartRes = await cartService.getCart();
+      if (cartRes.isSuccess) {
+        dispatch(loadCart(cartRes.content));
+        setError(null);
+      } else {
+        setError(cartRes.errMessage);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCreateOrderClick = async () => {
+    if (!user?.address) {
+      setError(
+        "Your address data was needed, please try again after filling it",
+      );
+      setIsAddressInputPopupOpen(true);
+      return;
+    }
+
+    const orderRes = await orderService.createOrderFromUserCart(user.id, null);
+    if (orderRes.isSuccess) {
+      setError(null);
+      await reloadCart();
+      dispatch(resetOrders());
+      navigate("/orders");
+    } else {
+      setError(orderRes.errMessage);
     }
   };
 
@@ -278,17 +321,18 @@ const CartPage: React.FC = () => {
               variant="contained"
               color="primary"
               sx={{ mt: 2 }}
-              component={RouterLink}
-              to="/checkout"
+              onClick={() => handleCreateOrderClick()}
             >
-              Proceed to Checkout
+              Create Order
             </Button>
-            <button
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{ mt: 2 }}
               onClick={() => handleClearCart()}
-              className="bg-secondary text-white mt-4 p-2 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-[1.02] hover:shadow-md cursor-pointer"
             >
               CLEAR CART
-            </button>
+            </Button>
           </div>
         </Box>
       </Paper>
@@ -296,6 +340,11 @@ const CartPage: React.FC = () => {
         <div className="text-lg text-center font-semibold text-secondary mt-2">
           {error}
         </div>
+      )}
+      {isAddressInputPopupOpen && (
+        <AddressInputPopup
+          setIsAddressInputPopupOpen={setIsAddressInputPopupOpen}
+        />
       )}
     </Container>
   );

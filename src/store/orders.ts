@@ -21,8 +21,24 @@ const ordersSlice = createSlice({
     loadAllOrders(state, action: PayloadAction<Order[]>) {
       state.allOrders = action.payload;
     },
+    addUserOrder(state, action: PayloadAction<Order>) {
+      if (state.usersOrders === null) {
+        state.usersOrders = [];
+      }
+      state.usersOrders.push(action.payload);
+
+      if (state.allOrders === null) {
+        state.allOrders = [];
+      }
+      state.allOrders.push(action.payload);
+    },
+    resetOrders(state) {
+      state.allOrders = null;
+      state.usersOrders = null;
+    },
   },
 });
 
-export const { loadUsersOrders, loadAllOrders } = ordersSlice.actions;
+export const { loadUsersOrders, loadAllOrders, addUserOrder, resetOrders } =
+  ordersSlice.actions;
 export default ordersSlice.reducer;
