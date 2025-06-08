@@ -25,7 +25,7 @@ import { loadCart } from "../store/cartSlice";
 import cartService from "../lib/cart.service";
 import AddressInputPopup from "./AddressInputPopup";
 import orderService from "../lib/order.service";
-import { addUserOrder, resetOrders } from "../store/orders";
+import { resetOrders } from "../store/orders";
 
 const CartPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
