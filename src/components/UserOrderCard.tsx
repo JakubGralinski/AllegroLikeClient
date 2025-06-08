@@ -6,7 +6,7 @@ interface UserOrderCardProps {
 
 function UserOrderCard({ order }: UserOrderCardProps) {
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md mb-4 border border-gray-200">
+    <div className="bg-white !text-black shadow-lg rounded-lg p-6 w-full max-w-md mb-4 border border-gray-200">
       <div className="flex justify-between items-center mb-2">
         <p className="font-semibold text-lg">Order #{order.id}</p>
         <span className="text-xs text-gray-500">

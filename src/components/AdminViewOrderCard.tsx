@@ -10,7 +10,7 @@ function AdminViewOrderCard({ order }: AdminViewOrderCardProps) {
   const user = useSelector((state: RootState) => state.auth.user);
   return (
     <div
-      className={`bg-white shadow-xl rounded-lg p-6 w-full max-w-lg mb-4 ${user?.id === order.user.id ? "border-2 border-blue-500" : ""}`}
+      className={`bg-white !text-black shadow-xl rounded-lg p-6 w-full max-w-lg mb-4 ${user?.id === order.user.id ? "border-2 border-blue-500" : ""}`}
     >
       <div className="flex justify-between items-center mb-2">
         <span className="font-semibold text-lg">Order #{order.id}</span>
