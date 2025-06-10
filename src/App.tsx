@@ -15,6 +15,7 @@ import Profile from "./components/Profile.tsx";
 import CartPage from "./components/CartPage.tsx";
 import { useTheme } from "./context/ThemeContext";
 import CreateProduct from "./components/CreateProduct.tsx";
+import Orders from "./components/Orders.tsx";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -82,6 +83,14 @@ function App() {
                 element={
                   <ProtectedRoute includeNavbar>
                     <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/orders"
+                element={
+                  <ProtectedRoute includeNavbar>
+                    <Orders />
                   </ProtectedRoute>
                 }
               />
