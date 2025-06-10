@@ -61,6 +61,7 @@ const ProductPage: React.FC = () => {
   const [selectedCondition, setSelectedCondition] = useState("All");
   const [priceRange, setPriceRange] = useState<number[]>([0, 2000]);
   const [showFilters, setShowFilters] = useState(false);
+
   const user = useSelector((state: RootState) => state.auth.user);
   const isAdmin = user?.role === "ROLE_ADMIN";
   const dispatch = useDispatch<AppDispatch>();

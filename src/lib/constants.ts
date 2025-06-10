@@ -1,4 +1,5 @@
-export const BASE_API_URL = "http://localhost:8080/api/";
+export const SERVER_URL = "http://localhost:8080";
+export const BASE_API_URL = `${SERVER_URL}/api/`;
 
 export const JWT_TOKEN_COOKIE_NAME = "allegrolike-jwttoken";
 
@@ -14,6 +15,10 @@ export const navigations: { title: string; to: string }[] = [
   {
     title: "Cart",
     to: "/cart",
+  },
+  {
+    title: "Orders",
+    to: "/orders",
   },
 ];
 
