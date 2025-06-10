@@ -93,7 +93,7 @@ function AppContent() {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute includeNavbar>
+            <ProtectedRoute includeNavbar adminOnly>
               <AdminDashboard />
             </ProtectedRoute>
           }

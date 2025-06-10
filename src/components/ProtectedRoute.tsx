@@ -2,14 +2,20 @@ import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import Navbar from "./Navbar.tsx";
+import { ADMIN } from "../lib/constants.ts";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  includeNavbar: boolean | null;
+  includeNavbar: boolean;
+  adminOnly?: boolean;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, includeNavbar }) => {
-  const { isAuthenticated, loading } = useAuth();
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  includeNavbar,
+  adminOnly = false,
+}) => {
+  const { isAuthenticated, loading, user } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -18,6 +24,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, includeNavbar
 
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  if (adminOnly && user?.role !== ADMIN) {
+    return <Navigate to="/" state={{ from: location }} replace />;
   }
 
   if (includeNavbar) {
