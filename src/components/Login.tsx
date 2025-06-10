@@ -16,11 +16,6 @@ import {
 import { useAuth } from "./AuthContext";
 import gsap from "gsap";
 import { useTheme } from "../context/ThemeContext";
-import { useDispatch } from "react-redux";
-import { loginUser } from "../store/auth";
-import { ADMIN, JWT_TOKEN_COOKIE_NAME } from "../lib/constants";
-import { User } from "../lib/types";
-import Cookies from "js-cookie";
 
 const schema = yup.object().shape({
   username: yup.string().required("Username is required"),
@@ -42,7 +37,6 @@ const Login: React.FC = () => {
 
   const { theme: appTheme } = useTheme();
   const muiTheme = useMuiTheme();
-  const dispatch = useDispatch();
 
   const {
     register,
