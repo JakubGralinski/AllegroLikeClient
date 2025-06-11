@@ -7,6 +7,7 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./components/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import AuthAnim from "./components/AuthAnim";
@@ -74,9 +75,9 @@ function App() {
               <Route
                 path="/createProduct"
                 element={
-                  <ProtectedRoute includeNavbar>
+                  <AdminRoute includeNavbar>
                     <CreateProduct />
-                  </ProtectedRoute>
+                  </AdminRoute>
                 }
               />
               <Route
@@ -106,9 +107,9 @@ function App() {
               <Route
                 path="/admin"
                 element={
-                  <ProtectedRoute includeNavbar>
+                  <AdminRoute includeNavbar>
                     <AdminDashboard />
-                  </ProtectedRoute>
+                  </AdminRoute>
                 }
               />
               <Route path="*" element={<Navigate to="/" replace />} />
