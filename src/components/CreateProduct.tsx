@@ -1,14 +1,13 @@
 import { ChangeEvent, FormEvent, ReactNode, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
-import { useNavigate } from "react-router-dom";
 import { Category } from "../lib/types";
 import categoryService from "../lib/category.service";
 import productService from "../lib/product.service";
+import UnauthorizedPage from "./UnauthorizedPage";
 
 function CreateProduct(): ReactNode {
   const user = useSelector((state: RootState) => state.auth.user);
-  const navigate = useNavigate();
 
   const [categories, setCategories] = useState<Category[]>();
   const [error, setError] = useState<string>("");
@@ -90,14 +89,13 @@ function CreateProduct(): ReactNode {
   }, []);
 
   if (user?.role !== "ROLE_ADMIN") {
-    alert("You need ADMIN privileges to access create product page");
-    navigate("/");
+    return <UnauthorizedPage />;
   }
 
   return (
     <form
       onSubmit={(e) => handleSubmit(e)}
-      className="flex flex-col items-center justify-center text-center h-screen gap-3"
+      className="flex flex-col items-center justify-center text-center h-screen md:w-[50%] gap-3"
     >
       <h2 className="font-semibold text-xl mb-10">
         Fill this form to create a new product with you as the seller
