@@ -47,16 +47,16 @@ const RidgelineChart: React.FC<RidgelineChartProps> = ({ data, isLoading, error 
         const innerWidth = width - margin.left - margin.right;
         const innerHeight = height - margin.top - margin.bottom;
         const bandSpacing = innerHeight / (bandCount > 1 ? bandCount - 1 : 1); // Avoid division by zero if only one band
-        const yGlobalMax = d3.max(data.flatMap(cat => cat.values), d => d.y) || 50; // Calculate max y from data, default 50
+        const yGlobalMax = d3.max(data.flatMap(cat => cat.values), (d: {y: number}) => d.y) || 50; // Calculate max y from data, default 50
         const yGlobal = d3.scaleLinear().domain([0, yGlobalMax]).range([innerHeight, 0]);
         
         const color = d3.scaleOrdinal<string>()
-            .domain(data.map(d => d.category))
+            .domain(data.map((d: RidgelineCategoryData) => d.category))
             .range(d3.schemeCategory10); // Using a standard D3 color scheme
 
         d3.select(svgRef.current).selectAll('*').remove();
 
-        const xDomainMax = d3.max(data.flatMap(cat => cat.values), d => d.x) || 10;
+        const xDomainMax = d3.max(data.flatMap(cat => cat.values), (d: {x: number}) => d.x) || 10;
         const x = d3.scaleLinear().domain([d3.min(data.flatMap(cat => cat.values), d => d.x) || 1, xDomainMax]).range([0, innerWidth]);
 
         const svg = d3.select(svgRef.current)
@@ -81,9 +81,9 @@ const RidgelineChart: React.FC<RidgelineChartProps> = ({ data, isLoading, error 
             grad.append('stop').attr('offset', '100%').attr('stop-color', color(cat.category) as string).attr('stop-opacity', 0.10);
 
             const areaPath = d3.area<{ x: number, y: number }>()
-                .x(d_1 => x(d_1.x))
-                .y0(_ => yGlobal(0) - offset)
-                .y1(d_1 => yGlobal(d_1.y) - offset)
+                .x((d_1: {x:number}) => x(d_1.x))
+                .y0((_: any) => yGlobal(0) - offset)
+                .y1((d_1: {y: number}) => yGlobal(d_1.y) - offset)
                 .curve(d3.curveBasis);
             svg.append('path')
                 .datum(cat.values)
@@ -92,7 +92,7 @@ const RidgelineChart: React.FC<RidgelineChartProps> = ({ data, isLoading, error 
                 .attr('stroke', 'none')
                 .attr('d', areaPath)
                 .attr('transform', `translate(${margin.left},${margin.top})`)
-                .on('mousemove', function (event, _) {
+                .on('mousemove', function (event: MouseEvent, _: any) {
                     const [mx, my] = d3.pointer(event, svgRef.current);
                     const xm = x.invert(mx - margin.left);
                     const closest = cat.values.reduce((a, b) => Math.abs(b.x - xm) < Math.abs(a.x - xm) ? b : a);
@@ -101,8 +101,8 @@ const RidgelineChart: React.FC<RidgelineChartProps> = ({ data, isLoading, error 
                 .on('mouseleave', () => setTooltip(null));
 
             const line = d3.line<{ x: number, y: number }>()
-                .x(d_1 => x(d_1.x))
-                .y(d_1 => yGlobal(d_1.y) - offset)
+                .x((d_1: {x: number}) => x(d_1.x))
+                .y((d_1: {y: number}) => yGlobal(d_1.y) - offset)
                 .curve(d3.curveBasis);
             svg.append('path')
                 .datum(cat.values)
@@ -291,7 +291,7 @@ const AdminDashboard: React.FC = () => {
             .style('fill', '#1976d2');
 
         g.append('g')
-            .call(d3.axisLeft(y).ticks(7).tickFormat(d_1 => `$${d3.format(",.0f")(d_1 as number)}`))
+            .call(d3.axisLeft(y).ticks(7).tickFormat((d_1: d3.NumberValue) => `$${d3.format(",.0f")(d_1 as number)}`))
             .selectAll('text')
             .style('font-size', '14px') 
             .style('fill', '#388e3c');
@@ -318,13 +318,13 @@ const AdminDashboard: React.FC = () => {
             .enter()
             .append('rect')
             .attr('class', 'bar') 
-            .attr('x', d => x(d.date) || 0)
+            .attr('x', (d: SalesData) => x(d.date) || 0)
             .attr('y', innerHeight)
             .attr('width', x.bandwidth())
             .attr('height', 0)
             .attr('fill', 'url(#bar-gradient)')
             .attr('rx', 14)
-            .on('mousemove', function (event, d) {
+            .on('mousemove', function (event: MouseEvent, d: SalesData) {
                 const [mx, my] = d3.pointer(event, svgRef.current);
                 setTooltip({ x: mx, y: my, value: d.amount, label: d.date });
                 d3.select(this).attr('fill', '#ff7043');
@@ -335,16 +335,16 @@ const AdminDashboard: React.FC = () => {
             })
             .transition()
             .duration(900)
-            .attr('y', d => y(d.amount))
-            .attr('height', d => innerHeight - y(d.amount));
+            .attr('y', (d: SalesData) => y(d.amount))
+            .attr('height', (d: SalesData) => innerHeight - y(d.amount));
 
         g.selectAll('.value-label')
             .data(salesData)
             .enter()
             .append('text')
             .attr('class', 'value-label')
-            .attr('x', d => (x(d.date) || 0) + x.bandwidth() / 2) 
-            .attr('y', d => y(d.amount) - 10) 
+            .attr('x', (d: SalesData) => (x(d.date) || 0) + x.bandwidth() / 2) 
+            .attr('y', (d: SalesData) => y(d.amount) - 10) 
             .attr('text-anchor', 'middle')
             .attr('fill', '#333')
             .attr('font-size', '12px') 
