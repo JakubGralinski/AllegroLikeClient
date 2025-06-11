@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Container,
-  Grid,
   TextField,
   Box,
   Typography,
@@ -17,6 +16,7 @@ import {
   InputAdornment,
   IconButton,
   Button,
+  Stack,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
@@ -230,8 +230,8 @@ const ProductPage: React.FC = () => {
         width: '100%'
       }}>
         <Container maxWidth="md">
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} md={8}>
+          <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems="center">
+            <Box sx={{ flex: 2 }}>
               <TextField
                 fullWidth
                 variant="outlined"
@@ -246,9 +246,9 @@ const ProductPage: React.FC = () => {
                   ),
                 }}
               />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Box sx={{ display: "flex", gap: 2 }}>
+            </Box>
+            <Box sx={{ flex: 1 }}>
+              <Stack direction="row" spacing={1}>
                 <FormControl fullWidth>
                   <InputLabel>Sort By</InputLabel>
                   <Select
@@ -263,170 +263,161 @@ const ProductPage: React.FC = () => {
                 <IconButton onClick={() => setShowFilters(!showFilters)}>
                   <FilterListIcon />
                 </IconButton>
-              </Box>
-            </Grid>
-          </Grid>
+              </Stack>
+            </Box>
+          </Stack>
         </Container>
       </Box>
 
-      <Container 
-        maxWidth="lg" 
-        sx={{ 
-          mb: 4, 
-          mx: 'auto',
-          px: 2
-        }}
-      >
-        {/* Filters Panel */}
-        {showFilters && (
-          <Paper sx={{ p: 2, mb: 3 }}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={4}>
-                <FormControl fullWidth>
-                  <InputLabel>Category</InputLabel>
-                  <Select
-                    value={selectedCategory}
-                    onChange={handleCategoryChange}
-                    label="Category"
-                  >
-                    {categories?.map((category) => (
-                      <MenuItem key={category.name} value={category.name}>
-                        {category.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <Typography gutterBottom>Price Range</Typography>
-                <Slider
-                  value={priceRange}
-                  onChange={handlePriceRangeChange}
-                  valueLabelDisplay="auto"
-                  min={0}
-                  max={2000}
-                  step={50}
-                />
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                  <Typography variant="body2">${priceRange[0]}</Typography>
-                  <Typography variant="body2">${priceRange[1]}</Typography>
-                </Box>
-              </Grid>
-            </Grid>
-          </Paper>
-        )}
-
-        {/* Product Listing */}
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: {
-              xs: '1fr',
-              sm: 'repeat(2, 1fr)',
-              md: 'repeat(3, 1fr)',
-            },
-            gap: 2,
-          }}
-        >
-          {filteredProducts &&
-            filteredProducts.map((product) => (
-              <Card
-                key={product.id}
-                sx={{
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
-                  '&:hover': {
-                    transform: 'scale(1.03)',
-                    boxShadow: 6,
-                  },
-                }}
-              >
-                <Link
-                  to={`/products/${product.id}`}
-                  style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%' }}
-                >
-                  <Box sx={{ 
-                    height: 200, 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    p: 1,
-                    backgroundColor: '#f5f5f5'
-                  }}>
-                    <CardMedia
-                      component="img"
-                      image={`${SERVER_URL}/${product.imageUrl}`}
-                      alt={product.name}
-                      sx={{
-                        maxHeight: '100%',
-                        maxWidth: '100%',
-                        objectFit: 'contain',
-                      }}
+      <Container maxWidth="lg">
+        <Stack direction={{ xs: 'column', md: 'row' }} spacing={4}>
+          {/* Filters Section - On the left */}
+          {showFilters && (
+            <Box sx={{ width: { xs: '100%', md: '300px' }, flexShrink: 0 }}>
+              <Paper sx={{ p: 2 }}>
+                <Typography variant="h6" gutterBottom>
+                  Filters
+                </Typography>
+                <Stack spacing={2}>
+                  <FormControl fullWidth>
+                    <InputLabel>Category</InputLabel>
+                    <Select
+                      value={selectedCategory}
+                      label="Category"
+                      onChange={handleCategoryChange}
+                    >
+                      <MenuItem value="All">All Categories</MenuItem>
+                      {categories?.map((category) => (
+                        <MenuItem key={category.id} value={category.name}>
+                          {category.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <Box>
+                    <Typography gutterBottom>Price Range</Typography>
+                    <Slider
+                      value={priceRange}
+                      onChange={handlePriceRangeChange}
+                      valueLabelDisplay="auto"
+                      min={0}
+                      max={2000}
                     />
                   </Box>
-                  <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                    <Typography gutterBottom variant="h6" component="h2">
-                      {product.name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {product.category.name}
-                    </Typography>
-                    <Box sx={{ flexGrow: 1 }} />
-                    <Typography variant="h5" color="primary" sx={{ mt: 1, fontWeight: 'bold' }}>
-                      ${product.price.toFixed(2)}
-                    </Typography>
-                  </CardContent>
-                </Link>
-                <Box sx={{ p: 2, pt: 0 }}>
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    startIcon={<AddShoppingCartIcon />}
-                    onClick={() => handleAddToCartClick(product)}
-                  >
-                    Add to Cart
-                  </Button>
-                </Box>
-              </Card>
-            ))}
-        </Box>
+                </Stack>
+              </Paper>
+            </Box>
+          )}
 
-        {isAdmin && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-            <Button
-              component={Link}
-              to="/createProduct"
-              variant="contained"
-              color="primary"
+          {/* Products Layout - Takes up the remaining space */}
+          <Box sx={{ flex: 1 }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: {
+                  xs: '1fr',
+                  sm: 'repeat(2, 1fr)',
+                  md: 'repeat(3, 1fr)',
+                },
+                gap: 2,
+              }}
             >
-              Create New Product
-            </Button>
+              {filteredProducts?.map((product) => (
+                <Card
+                  key={product.id}
+                  sx={{
+                    height: "100%",
+                    display: 'flex',
+                    flexDirection: 'column',
+                    transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'scale(1.03)',
+                      boxShadow: 6,
+                    },
+                  }}
+                >
+                  <Link
+                    to={`/products/${product.id}`}
+                    style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%' }}
+                  >
+                    <Box sx={{ 
+                      height: 200, 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center',
+                      p: 1,
+                      backgroundColor: '#f5f5f5'
+                    }}>
+                      <CardMedia
+                        component="img"
+                        image={`${SERVER_URL}/${product.imageUrl}`}
+                        alt={product.name}
+                        sx={{
+                          maxHeight: '100%',
+                          maxWidth: '100%',
+                          objectFit: 'contain',
+                        }}
+                      />
+                    </Box>
+                    <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                      <Typography gutterBottom variant="h6" component="h2">
+                        {product.name}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {product.category.name}
+                      </Typography>
+                      <Box sx={{ flexGrow: 1 }} />
+                      <Typography variant="h5" color="primary" sx={{ mt: 1, fontWeight: 'bold' }}>
+                        ${product.price.toFixed(2)}
+                      </Typography>
+                    </CardContent>
+                  </Link>
+                  <Box sx={{ p: 2, pt: 0 }}>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      startIcon={<AddShoppingCartIcon />}
+                      onClick={() => handleAddToCartClick(product)}
+                    >
+                      Add to Cart
+                    </Button>
+                  </Box>
+                </Card>
+              ))}
+            </Box>
           </Box>
-        )}
+        </Stack>
+      </Container>
 
-        {(cartError || productsError || categoriesError) && (
-          <Box sx={{ mt: 2 }}>
+      {isAdmin && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+          <Button
+            component={Link}
+            to="/createProduct"
+            variant="contained"
+            color="primary"
+          >
+            Create New Product
+          </Button>
+        </Box>
+      )}
+
+      {(cartError || productsError || categoriesError) && (
+        <Container maxWidth="lg" sx={{ mt: 2 }}>
+          <Stack spacing={2}>
             {cartError && (
-              <div className="text-lg text-center font-semibold text-secondary mt-2">
-                {cartError}
-              </div>
+              <Notification message={cartError} />
             )}
             {productsError && (
-              <div className="text-lg text-center font-semibold text-secondar mt-2y">
-                {productsError}
-              </div>
+              <Notification message={productsError} />
             )}
             {categoriesError && (
-              <div className="text-lg text-center font-semibold text-secondary mt-2">
-                {categoriesError}
-              </div>
+              <Notification message={categoriesError} />
             )}
-          </Box>
-        )}
-        {notificationMessage && <Notification message={notificationMessage} />}
-      </Container>
+          </Stack>
+        </Container>
+      )}
+      {notificationMessage && <Notification message={notificationMessage} />}
     </Box>
   );
 };
