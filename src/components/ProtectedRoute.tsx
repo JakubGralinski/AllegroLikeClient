@@ -1,49 +1,27 @@
-import { ReactNode } from "react";
-import { Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
-import Navbar from "./Navbar";
+import React from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "./AuthContext";
+import Navbar from "./Navbar.tsx";
 import { Box } from "@mui/material";
-import UnauthorizedPage from "./UnauthorizedPage";
 
-type Props = {
-  children: ReactNode;
-  includeNavbar?: boolean;
-  requireRole?: "ROLE_ADMIN" | "ROLE_USER";
-  showUnauthorizedPage?: boolean;
-};
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+  includeNavbar: boolean | null;
+}
 
-function ProtectedRoute({ 
-  children, 
-  includeNavbar = false, 
-  requireRole, 
-  showUnauthorizedPage = false 
-}: Props) {
-  const user = useSelector((state: RootState) => state.auth.user);
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  includeNavbar,
+}) => {
+  const { isAuthenticated, loading } = useAuth();
+  const location = useLocation();
 
-  // Check if user is authenticated
-  if (!user) {
-    return <Navigate to="/login" replace />;
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
-  // Check role-based access if required
-  if (requireRole && user.role !== requireRole) {
-    // If admin role is required but user is not admin
-    if (requireRole === "ROLE_ADMIN") {
-      if (showUnauthorizedPage) {
-        return (
-          <>
-            {includeNavbar && <Navbar />}
-            <Box component="main" sx={{ ml: { sm: "240px" } }}>
-              <UnauthorizedPage />
-            </Box>
-          </>
-        );
-      }
-      return <Navigate to="/" replace />;
-    }
-    // For other role mismatches, redirect to login
-    return <Navigate to="/login" replace />;
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   return (
@@ -54,6 +32,6 @@ function ProtectedRoute({
       </Box>
     </>
   );
-}
+};
 
 export default ProtectedRoute;

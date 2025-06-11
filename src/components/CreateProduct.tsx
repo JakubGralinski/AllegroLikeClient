@@ -90,7 +90,6 @@ function CreateProduct(): ReactNode {
   }, []);
 
   if (user?.role !== "ROLE_ADMIN") {
-    alert("You need ADMIN privileges to access create product page");
     navigate("/");
   }
 
