@@ -123,8 +123,7 @@ const ProductPage: React.FC = () => {
     });
 
   const handleAddToCart = (product: Omit<CartItem, "quantity">) => {
-    // Define your logic for adding items to the cart here
-    console.log("Implement add-to-cart logic", product);
+    dispatch(addItemToCart({ ...product, quantity: 1 }));
   };
 
   return (
