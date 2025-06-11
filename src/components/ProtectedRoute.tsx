@@ -27,7 +27,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   return (
     <>
       {includeNavbar && <Navbar />}
-      <Box component="main" sx={{ ml: { sm: "240px" } }}>
+      <Box
+        component="main"
+        sx={{ ml: { sm: "240px" } }}
+        className="flex items-center justify-center"
+      >
         {children}
       </Box>
     </>

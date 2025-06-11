@@ -11,6 +11,7 @@ import { Container } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { useNavigate } from "react-router-dom";
+import UnauthorizedPage from "./UnauthorizedPage";
 
 // Export SalesData if it's primarily used here and imported by api.ts
 // If api.ts defines its own SalesData based on DTO, that's also fine.
@@ -48,9 +49,6 @@ const RidgelineChart: React.FC<RidgelineChartProps> = ({
   const fontSize = 14;
   const legendFontSize = 22;
   const labelFontSize = 16;
-
-  const user = useSelector((state: RootState) => state.auth.user);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!svgRef.current || !data || data.length === 0) {
@@ -247,10 +245,6 @@ const RidgelineChart: React.FC<RidgelineChartProps> = ({
     </div>
   );
 
-  if (user?.role !== "ROLE_ADMIN") {
-    navigate("/");
-  }
-
   if (isLoading)
     return (
       <div style={{ textAlign: "center", padding: "2rem" }}>
@@ -357,6 +351,8 @@ const AdminDashboard: React.FC = () => {
     value: number;
     label: string;
   } | null>(null);
+
+  const user = useSelector((state: RootState) => state.auth.user);
 
   const {
     data: salesData,
@@ -518,6 +514,10 @@ const AdminDashboard: React.FC = () => {
       .duration(500)
       .style("opacity", 1);
   }, [salesData, dimensions]);
+
+  if (user?.role !== "ROLE_ADMIN") {
+    return <UnauthorizedPage />;
+  }
 
   return (
     <Container
