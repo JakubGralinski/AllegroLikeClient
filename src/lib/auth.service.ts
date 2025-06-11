@@ -1,9 +1,9 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import {JWT_TOKEN_COOKIE_NAME} from "./constants.ts";
+import {JWT_TOKEN_COOKIE_NAME, SERVER_URL} from "./constants.ts";
 import {User} from "./types.ts";
 
-const API_URL = "http://localhost:8080/api/auth";
+const API_URL = `${SERVER_URL}/api/auth`;
 
 export interface LoginRequest {
   username: string;
