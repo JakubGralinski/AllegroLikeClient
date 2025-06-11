@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import Navbar from "./Navbar";
 import { Box } from "@mui/material";
-import { ADMIN } from "../lib/constants";
 import UnauthorizedPage from "./UnauthorizedPage";
 
 type Props = {
