@@ -220,198 +220,214 @@ const ProductPage: React.FC = () => {
   }
 
   return (
-    <Container
-      maxWidth="lg"
-      sx={{ mt: 4, mb: 4 }}
-      className="h-screen flex items-center justify-center flex-col"
-    >
-      {/* Search and Filter Header */}
-      <Box sx={{ mb: 4 }}>
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} md={8} component={"div" as React.ElementType}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={handleSearch}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} md={4} component={"div" as React.ElementType}>
-            <Box sx={{ display: "flex", gap: 2 }}>
-              <FormControl fullWidth>
-                <InputLabel>Sort By</InputLabel>
-                <Select
-                  value={sortBy}
-                  onChange={handleSortChange}
-                  label="Sort By"
-                >
-                  <MenuItem value="price-asc">Price: Low to High</MenuItem>
-                  <MenuItem value="price-desc">Price: High to Low</MenuItem>
-                </Select>
-              </FormControl>
-              <IconButton onClick={() => setShowFilters(!showFilters)}>
-                <FilterListIcon />
-              </IconButton>
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
-
-      {/* Filters Panel */}
-      {showFilters && (
-        <Paper sx={{ p: 2, mb: 4 }}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={4} component={"div" as React.ElementType}>
-              <FormControl fullWidth>
-                <InputLabel>Category</InputLabel>
-                <Select
-                  value={selectedCategory}
-                  onChange={handleCategoryChange}
-                  label="Category"
-                >
-                  {categories?.map((category) => (
-                    <MenuItem key={category.name} value={category.name}>
-                      {category.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={4} component={"div" as React.ElementType}>
-              <Typography gutterBottom>Price Range</Typography>
-              <Slider
-                value={priceRange}
-                onChange={handlePriceRangeChange}
-                valueLabelDisplay="auto"
-                min={0}
-                max={2000}
-                step={50}
+    <Box sx={{ width: '100%' }}>
+      {/* Search and Filter Header - Centered across full screen width */}
+      <Box sx={{ 
+        mb: 4, 
+        mt: 4,
+        display: 'flex', 
+        justifyContent: 'center',
+        width: '100%'
+      }}>
+        <Container maxWidth="md">
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12} md={8}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={handleSearch}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
               />
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography variant="body2">${priceRange[0]}</Typography>
-                <Typography variant="body2">${priceRange[1]}</Typography>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <FormControl fullWidth>
+                  <InputLabel>Sort By</InputLabel>
+                  <Select
+                    value={sortBy}
+                    onChange={handleSortChange}
+                    label="Sort By"
+                  >
+                    <MenuItem value="price-asc">Price: Low to High</MenuItem>
+                    <MenuItem value="price-desc">Price: High to Low</MenuItem>
+                  </Select>
+                </FormControl>
+                <IconButton onClick={() => setShowFilters(!showFilters)}>
+                  <FilterListIcon />
+                </IconButton>
               </Box>
             </Grid>
           </Grid>
-        </Paper>
-      )}
+        </Container>
+      </Box>
 
-      {/* Product Grid */}
-      <Grid container spacing={3}>
-        {filteredProducts?.map((product) => (
-          <Grid
-            item
-            key={product.id}
-            xs={12}
-            sm={6}
-            md={4}
-            lg={3}
-            component={"div" as React.ElementType}
-          >
-            <Card
-              sx={{
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                transition:
-                  "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
-                "&:hover": {
-                  transform: "scale(1.03)",
-                  boxShadow: 6, // Corresponds to theme.shadows[6]
-                },
-              }}
-            >
-              <CardMedia
-                component="img"
-                image={SERVER_URL + "/" + product.imageUrl}
-                alt={product.name}
+      <Container 
+        maxWidth="lg" 
+        sx={{ 
+          mb: 4, 
+          mx: 'auto',
+          px: 2
+        }}
+      >
+        {/* Filters Panel */}
+        {showFilters && (
+          <Paper sx={{ p: 2, mb: 3 }}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={4}>
+                <FormControl fullWidth>
+                  <InputLabel>Category</InputLabel>
+                  <Select
+                    value={selectedCategory}
+                    onChange={handleCategoryChange}
+                    label="Category"
+                  >
+                    {categories?.map((category) => (
+                      <MenuItem key={category.name} value={category.name}>
+                        {category.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Typography gutterBottom>Price Range</Typography>
+                <Slider
+                  value={priceRange}
+                  onChange={handlePriceRangeChange}
+                  valueLabelDisplay="auto"
+                  min={0}
+                  max={2000}
+                  step={50}
+                />
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Typography variant="body2">${priceRange[0]}</Typography>
+                  <Typography variant="body2">${priceRange[1]}</Typography>
+                </Box>
+              </Grid>
+            </Grid>
+          </Paper>
+        )}
+
+        {/* Product Listing */}
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: {
+              xs: '1fr',
+              sm: 'repeat(2, 1fr)',
+              md: 'repeat(3, 1fr)',
+            },
+            gap: 2,
+          }}
+        >
+          {filteredProducts &&
+            filteredProducts.map((product) => (
+              <Card
+                key={product.id}
                 sx={{
-                  objectFit: "cover", // Ensures the image covers the area, might crop
-                  height: 180,
-                  width: "100%",
-                }}
-              />
-              <CardContent
-                sx={{
-                  flexGrow: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                  p: 2,
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+                  '&:hover': {
+                    transform: 'scale(1.03)',
+                    boxShadow: 6,
+                  },
                 }}
               >
-                <Typography
-                  gutterBottom
-                  variant="h6"
-                  component="h2"
-                  sx={{ fontWeight: "medium", mb: 1 }}
+                <Link
+                  to={`/products/${product.id}`}
+                  style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%' }}
                 >
-                  {product.name}
-                </Typography>
-                <Typography
-                  variant="h5"
-                  color="primary"
-                  sx={{ fontWeight: "bold", mb: 1 }}
-                >
-                  ${product.price}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mt: "auto" }}
-                >
-                  {product.category.name}
-                </Typography>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<AddShoppingCartIcon />}
-                  onClick={() => handleAddToCartClick(product)}
-                  sx={{ mt: 2, alignSelf: "center" }}
-                >
-                  Add to Cart
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-      {isAdmin && (
-        <Link
-          to={"/createProduct"}
-          className="p-3 bg-primary font-semibold rounded-lg text-white mt-10 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-[1.02] hover:shadow-md"
-        >
-          Create new product
-        </Link>
-      )}
-      {(cartError || productsError || categoriesError) && (
-        <Box sx={{ mt: 2 }}>
-          {cartError && (
-            <div className="text-lg text-center font-semibold text-secondary mt-2">
-              {cartError}
-            </div>
-          )}
-          {productsError && (
-            <div className="text-lg text-center font-semibold text-secondar mt-2y">
-              {productsError}
-            </div>
-          )}
-          {categoriesError && (
-            <div className="text-lg text-center font-semibold text-secondary mt-2">
-              {categoriesError}
-            </div>
-          )}
+                  <Box sx={{ 
+                    height: 200, 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    p: 1,
+                    backgroundColor: '#f5f5f5'
+                  }}>
+                    <CardMedia
+                      component="img"
+                      image={`${SERVER_URL}/${product.imageUrl}`}
+                      alt={product.name}
+                      sx={{
+                        maxHeight: '100%',
+                        maxWidth: '100%',
+                        objectFit: 'contain',
+                      }}
+                    />
+                  </Box>
+                  <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                    <Typography gutterBottom variant="h6" component="h2">
+                      {product.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {product.category.name}
+                    </Typography>
+                    <Box sx={{ flexGrow: 1 }} />
+                    <Typography variant="h5" color="primary" sx={{ mt: 1, fontWeight: 'bold' }}>
+                      ${product.price.toFixed(2)}
+                    </Typography>
+                  </CardContent>
+                </Link>
+                <Box sx={{ p: 2, pt: 0 }}>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    startIcon={<AddShoppingCartIcon />}
+                    onClick={() => handleAddToCartClick(product)}
+                  >
+                    Add to Cart
+                  </Button>
+                </Box>
+              </Card>
+            ))}
         </Box>
-      )}
-      {notificationMessage && <Notification message={notificationMessage!} />}
-    </Container>
+
+        {isAdmin && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+            <Button
+              component={Link}
+              to="/createProduct"
+              variant="contained"
+              color="primary"
+            >
+              Create New Product
+            </Button>
+          </Box>
+        )}
+
+        {(cartError || productsError || categoriesError) && (
+          <Box sx={{ mt: 2 }}>
+            {cartError && (
+              <div className="text-lg text-center font-semibold text-secondary mt-2">
+                {cartError}
+              </div>
+            )}
+            {productsError && (
+              <div className="text-lg text-center font-semibold text-secondar mt-2y">
+                {productsError}
+              </div>
+            )}
+            {categoriesError && (
+              <div className="text-lg text-center font-semibold text-secondary mt-2">
+                {categoriesError}
+              </div>
+            )}
+          </Box>
+        )}
+        {notificationMessage && <Notification message={notificationMessage} />}
+      </Container>
+    </Box>
   );
 };
 
