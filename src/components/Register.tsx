@@ -70,7 +70,7 @@ const Register: React.FC = () => {
       );
     }
   }, []);
-  
+
   // Button hover animation
   React.useEffect(() => {
     const btn = buttonRef.current;
@@ -92,7 +92,7 @@ const Register: React.FC = () => {
   const onSubmit = async (data: RegisterFormInputs) => {
     try {
       await registerUser(data.username, data.email, data.password);
-      navigate("/login");
+      navigate("/");
     } catch (err: any) {
       console.error("Registration error:", err);
       setError(err.message || "Registration failed. Please try again.");
@@ -121,13 +121,23 @@ const Register: React.FC = () => {
 
   return (
     <>
-      <Container component="main" maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+      <Container
+        component="main"
+        maxWidth="xs"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "100vh",
+        }}
+      >
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            width: '100%',
+            width: "100%",
           }}
         >
           <Paper
@@ -139,7 +149,10 @@ const Register: React.FC = () => {
               flexDirection: "column",
               alignItems: "center",
               width: "100%",
-              backgroundColor: appTheme === 'dark' ? muiTheme.palette.grey[900] : muiTheme.palette.background.paper,
+              backgroundColor:
+                appTheme === "dark"
+                  ? muiTheme.palette.grey[900]
+                  : muiTheme.palette.background.paper,
             }}
           >
             <Typography component="h1" variant="h5">
